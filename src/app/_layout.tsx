@@ -3,6 +3,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useColorScheme } from 'react-native';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
+import MissingConfigScreen from '@/features/home/screens/MissingConfigScreen';
+import { getSupabaseEnv } from '@/lib/supabase/env';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -10,10 +12,16 @@ SplashScreen.preventAutoHideAsync();
 // la lógica y la UI real viven en src/features/<dominio>/. Ver src/README.md.
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const supabaseEnv = getSupabaseEnv();
+
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AnimatedSplashOverlay />
-      <Stack screenOptions={{ headerShown: false }} />
+      {supabaseEnv.ok ? (
+        <Stack screenOptions={{ headerShown: false }} />
+      ) : (
+        <MissingConfigScreen missing={supabaseEnv.missing} />
+      )}
     </ThemeProvider>
   );
 }
