@@ -1,0 +1,10 @@
+{
+  "appName": "Zarpe Islands",
+  "home": {
+    "scaffoldStatus": "Project scaffold — Epic A in progress"
+  },
+  "language": {
+    "toggleLabel": "Switch language",
+    "current": "Current language: English"
+  }
+}

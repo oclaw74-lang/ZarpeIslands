@@ -4,6 +4,7 @@ import { useColorScheme } from 'react-native';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import MissingConfigScreen from '@/features/home/screens/MissingConfigScreen';
+import '@/lib/i18n';
 import { getSupabaseEnv } from '@/lib/supabase/env';
 
 SplashScreen.preventAutoHideAsync();
