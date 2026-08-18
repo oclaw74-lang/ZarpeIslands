@@ -27,6 +27,15 @@ src/
 3. **Ningún string de UI se hardcodea** — usa las claves de traducción de i18n (ver A3) desde el primer componente que agregues.
 4. **Todo componente de UI nuevo respeta `agteamos/design/DESIGN_SYSTEM.md`** (paleta, tipografía, accesibilidad de línea base).
 
+## i18n — convención de namespaces
+
+Motor: `i18next` + `react-i18next`, con detección de idioma del dispositivo vía `expo-localization` (`src/lib/i18n/index.ts`). Inglés es el locale base del código; español vive completo desde el día uno.
+
+- Cada feature que agrega texto de UI crea su propio namespace: `src/lib/i18n/locales/en/<namespace>.json` + `src/lib/i18n/locales/es/<namespace>.json` (mismas claves en ambos — hay un test que lo garantiza para `common`, replicar el patrón por namespace nuevo).
+- Registrar el namespace nuevo en el objeto `resources` de `src/lib/i18n/index.ts`.
+- Consumir con `useTranslation('<namespace>')` — nunca hardcodear strings de UI (regla de Definition of Done, ver `agteamos/product/mission.md`).
+- Persistencia del idioma elegido por el usuario entre reinicios se resuelve en Epic B6 (Perfil), guardado en `company_members.preferred_language` — no en este módulo base.
+
 ## Cómo agregar una feature nueva
 
 ```

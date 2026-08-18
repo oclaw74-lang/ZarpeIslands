@@ -1,8 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import LanguageToggle from '@/features/home/components/LanguageToggle';
 import { Spacing } from '@/constants/theme';
 
 /**
@@ -11,11 +13,14 @@ import { Spacing } from '@/constants/theme';
  * Ver agteamos/product/roadmap.md y agteamos/product/backlog-detail.md.
  */
 export default function HomeScreen() {
+  const { t } = useTranslation('common');
+
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <ThemedText type="title">Zarpe Islands</ThemedText>
-        <ThemedText type="small">Project scaffold — Epic A in progress</ThemedText>
+        <ThemedText type="title">{t('appName')}</ThemedText>
+        <ThemedText type="small">{t('home.scaffoldStatus')}</ThemedText>
+        <LanguageToggle />
       </SafeAreaView>
     </ThemedView>
   );
