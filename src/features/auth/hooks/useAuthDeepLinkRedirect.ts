@@ -22,12 +22,22 @@ import { parseRecoveryTokensFromUrl } from '@/features/auth/api/authService';
  * ya consumió ese mismo evento nativo para decidir la ruta, y se lo perdería
  * (confirmado con un deep link real en emulador: sin este hook, la screen
  * mostraba "link inválido" incluso con tokens de Supabase genuinos).
+ *
+ * Solo redirige si la URL trae `type=recovery` (B7): el login con Google
+ * también recibe una URL con `access_token`/`refresh_token` en el fragmento
+ * al volver de `WebBrowser.openAuthSessionAsync`, pero esa promesa ya
+ * resuelve el flujo completo dentro de `authService.signInWithGoogle` — si
+ * este listener global también la agarrara, redirigiría a
+ * `/reset-password` por encima de la navegación a Home que hace
+ * `LoginScreen`, una carrera real entre dos código que procesan la misma URL.
  */
 export function useAuthDeepLinkRedirect() {
   const router = useRouter();
 
   useEffect(() => {
     function handleUrl(url: string) {
+      if (!url.includes('type=recovery')) return;
+
       const tokens = parseRecoveryTokensFromUrl(url);
       if (!tokens) return;
 
