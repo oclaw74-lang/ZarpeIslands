@@ -5,12 +5,12 @@ schema: full
 context_tier: 2
 layer: frontend
 priority: high
-status: in_progress
+status: done
 branch: feature/3-supabase-client-config
 platform: github
 ticket_url: https://github.com/oclaw74-lang/ZarpeIslands/issues/3
 domains: []
-doc_impact: false
+doc_impact: true
 created: 2026-08-18
 updated: 2026-08-18
 owner:
