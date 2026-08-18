@@ -15,7 +15,7 @@ Este es el backlog de producto de ESTE proyecto (no confundir con el `BACKLOG.md
 
 | Epic | Nombre | Tickets | Estado | Issue GitHub |
 |---|---|---|---|---|
-| A | Project Foundation & Scaffold | 5 (2/5 done) | `in_github` | [#1](https://github.com/oclaw74-lang/ZarpeIslands/issues/1) (A1: ✅ [#2](https://github.com/oclaw74-lang/ZarpeIslands/issues/2)/PR [#7](https://github.com/oclaw74-lang/ZarpeIslands/pull/7), A2: ✅ [#3](https://github.com/oclaw74-lang/ZarpeIslands/issues/3)/PR [#9](https://github.com/oclaw74-lang/ZarpeIslands/pull/9), A3: [#4](https://github.com/oclaw74-lang/ZarpeIslands/issues/4), A4: [#5](https://github.com/oclaw74-lang/ZarpeIslands/issues/5), A5: [#6](https://github.com/oclaw74-lang/ZarpeIslands/issues/6)) |
+| A | Project Foundation & Scaffold | 5 (3/5 done) | `in_github` | [#1](https://github.com/oclaw74-lang/ZarpeIslands/issues/1) (A1: ✅ [#2](https://github.com/oclaw74-lang/ZarpeIslands/issues/2)/PR [#7](https://github.com/oclaw74-lang/ZarpeIslands/pull/7), A2: ✅ [#3](https://github.com/oclaw74-lang/ZarpeIslands/issues/3)/PR [#9](https://github.com/oclaw74-lang/ZarpeIslands/pull/9), A3: ✅ [#4](https://github.com/oclaw74-lang/ZarpeIslands/issues/4)/PR [#10](https://github.com/oclaw74-lang/ZarpeIslands/pull/10), A4: [#5](https://github.com/oclaw74-lang/ZarpeIslands/issues/5), A5: [#6](https://github.com/oclaw74-lang/ZarpeIslands/issues/6)) |
 | B | Auth & Company Bootstrap | 6 | `backlog` | — |
 | C | Boats & Job Positions | 4 | `backlog` | — |
 | D | Ponche offline-first | 5 | `backlog` | — |

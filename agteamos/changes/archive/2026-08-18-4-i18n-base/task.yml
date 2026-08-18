@@ -5,7 +5,7 @@ schema: full
 context_tier: 2
 layer: frontend
 priority: high
-status: in_progress
+status: done
 branch: feature/4-i18n-base
 platform: github
 ticket_url: https://github.com/oclaw74-lang/ZarpeIslands/issues/4
