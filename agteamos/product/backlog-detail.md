@@ -201,6 +201,24 @@ Convención de dependencias: IDs de esta misma lista. "Ninguna" = puede empezar 
 
 ---
 
+### B7. Login con Google (OAuth)
+**Como** cualquier usuario, **necesito** poder iniciar sesión con mi cuenta de Google, **para** no tener que crear ni recordar una contraseña separada.
+
+- Depende de: B1
+- Fuente: pedido explícito del usuario (no estaba en `documents/`)
+
+**Reglas de negocio / notas técnicas:**
+- `supabase.auth.signInWithOAuth({ provider: 'google' })` con `redirectTo` al deep link de la app (mismo mecanismo que el reset de contraseña de B1 — ver `useAuthDeepLinkRedirect`).
+- Requiere un OAuth Client de Google Cloud Console configurado en Supabase Auth → Providers → Google (client ID/secret) — **acceso externo que no puede crear el agente**, queda como paso manual del usuario en el dashboard.
+- Un usuario que se loguea por primera vez con Google todavía necesita el bootstrap de empresa de B2 (mismo flujo que un usuario nuevo por email).
+
+**Acceptance Criteria:**
+1. Botón "Continuar con Google" visible en `LoginScreen`, abre el flujo OAuth del navegador del sistema.
+2. Al volver del flujo con éxito, el deep link establece la sesión y redirige a Home (mismo gate de `index.tsx` que B1).
+3. Si el usuario cancela el flujo de Google, vuelve al Login sin error falso ni pantalla colgada.
+
+---
+
 ## Epic C — Boats & Job Positions
 
 **Objetivo:** que existan barcos y catálogo de puestos configurables por empresa, base para asignación, mantenimiento y rotación.
