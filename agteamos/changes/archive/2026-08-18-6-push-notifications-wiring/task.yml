@@ -5,7 +5,7 @@ schema: full
 context_tier: 2
 layer: frontend
 priority: medium
-status: in_progress
+status: done
 branch: feature/6-push-notifications-wiring
 platform: github
 ticket_url: https://github.com/oclaw74-lang/ZarpeIslands/issues/6
