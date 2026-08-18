@@ -39,7 +39,7 @@ No hay Docker/`docker-compose` en este proyecto: el backend es Supabase (gestion
 
 ## Variables de entorno
 
-Ver `.env.example` en la raíz — Supabase (URL + anon key), PowerSync URL, FCM sender ID, locale por defecto. Ningún valor real se commitea; los valores viven en Expo EAS secrets / GitHub Actions secrets cuando corresponda.
+Ver `.env.example` en la raíz — Supabase (URL + anon key), FCM sender ID, locale por defecto. Ningún valor real se commitea; los valores viven en Expo EAS secrets / GitHub Actions secrets cuando corresponda. La sincronización offline (WatermelonDB, ver ADR-004) no requiere variables de entorno propias — usa el mismo cliente Supabase.
 
 ## Autenticación de Git/GitHub para agentes
 

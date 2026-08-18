@@ -10,10 +10,10 @@ src/
 │       ├── screens/    # Pantallas de ese dominio (importadas desde src/app/)
 │       ├── components/ # Componentes propios del dominio (no reutilizados fuera de él)
 │       ├── hooks/       # Hooks propios del dominio
-│       └── api/         # Llamadas a Supabase/PowerSync específicas del dominio
+│       └── api/         # Llamadas a Supabase/WatermelonDB específicas del dominio
 ├── components/     # Componentes UI reutilizables entre features (Button, Card, Badge, ...)
 ├── hooks/          # Custom hooks globales (no atados a un dominio)
-├── lib/            # Clientes de servicios: Supabase (A2), PowerSync (A4), i18n (A3)
+├── lib/            # Clientes de servicios: Supabase (A2), WatermelonDB (A4), i18n (A3)
 ├── store/          # Estado global (librería a definir cuando la primera feature lo requiera)
 ├── types/          # Tipos TypeScript globales/compartidos
 ├── constants/      # Theme/tokens (ver agteamos/design/DESIGN_SYSTEM.md), config
@@ -43,7 +43,7 @@ src/features/<dominio>/
 ├── screens/
 ├── components/     (opcional, solo si el dominio tiene componentes propios)
 ├── hooks/          (opcional)
-└── api/            (opcional, cuando exista integración con Supabase/PowerSync)
+└── api/            (opcional, cuando exista integración con Supabase/WatermelonDB)
 ```
 
 Y en `src/app/`, agregar la ruta correspondiente que importe la screen desde esa feature.
