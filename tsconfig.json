@@ -3,6 +3,10 @@
   "compilerOptions": {
     "strict": true,
     "types": ["jest"],
+    "experimentalDecorators": true,
+    // Los campos de modelos WatermelonDB los inicializan sus decoradores
+    // (@field/@date), no el constructor — TS no puede verlo estáticamente.
+    "strictPropertyInitialization": false,
     "paths": {
       "@/*": [
         "./src/*"
