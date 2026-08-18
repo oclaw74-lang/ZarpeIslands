@@ -51,6 +51,17 @@ export const Fonts = Platform.select({
   },
 });
 
+/**
+ * Sora (Google Fonts) — tipografía de marca elegida por el usuario, cargada
+ * vía `@expo-google-fonts/sora` + `useFonts` en `src/app/_layout.tsx`. Se usa
+ * en `ThemedText` en vez de `Fonts.sans` para todo el texto de la app.
+ */
+export const BrandFont = {
+  regular: 'Sora_400Regular',
+  semiBold: 'Sora_600SemiBold',
+  bold: 'Sora_700Bold',
+} as const;
+
 export const Spacing = {
   half: 2,
   one: 4,
