@@ -6,6 +6,7 @@ import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import MissingConfigScreen from '@/features/home/screens/MissingConfigScreen';
 import '@/lib/i18n';
 import { getSupabaseEnv } from '@/lib/supabase/env';
+import { useAutoSync } from '@/lib/watermelon/useAutoSync';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -14,6 +15,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const supabaseEnv = getSupabaseEnv();
+  useAutoSync();
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>

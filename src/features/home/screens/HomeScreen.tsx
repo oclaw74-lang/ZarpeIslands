@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import LanguageToggle from '@/features/home/components/LanguageToggle';
+import SyncTestPanel from '@/features/home/components/SyncTestPanel';
 import { Spacing } from '@/constants/theme';
 
 /**
@@ -21,6 +22,7 @@ export default function HomeScreen() {
         <ThemedText type="title">{t('appName')}</ThemedText>
         <ThemedText type="small">{t('home.scaffoldStatus')}</ThemedText>
         <LanguageToggle />
+        <SyncTestPanel />
       </SafeAreaView>
     </ThemedView>
   );
