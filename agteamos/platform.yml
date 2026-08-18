@@ -1,0 +1,23 @@
+# agteamos/platform.yml
+repo_host: github
+repo:
+  github:
+    org: oclaw74-lang
+    name: ZarpeIslands
+  azure_devops:
+    organization: null
+    project: null
+tracker: github
+env_var_names:
+  github_token: OCLAW74_GH_TOKEN
+  azure_devops_pat: null
+branch_strategy: team
+branch_strategy_custom: null
+ci_target: github_actions
+deploy_target: null
+pr_convention:
+  required_reviewers: 0
+  reviewer_names: []
+  merge_strategy: squash
+handoff_mode: explicit
+created_at: "2026-08-18"

@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, staging, main]
+  push:
+    branches: [develop, staging, main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for app scaffold
+        id: scaffold
+        run: |
+          if [ -f package.json ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node
+        if: steps.scaffold.outputs.exists == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.scaffold.outputs.exists == 'true'
+        run: npm ci
+
+      - name: Lint
+        if: steps.scaffold.outputs.exists == 'true'
+        run: npm run lint
+
+      - name: Test
+        if: steps.scaffold.outputs.exists == 'true'
+        run: npm test -- --coverage
+
+      - name: Build (Expo prebuild check)
+        if: steps.scaffold.outputs.exists == 'true'
+        run: npx expo-doctor
+
+      - name: No app scaffold yet
+        if: steps.scaffold.outputs.exists == 'false'
+        run: echo "package.json no existe todavía — el scaffold de la app se agrega en la Feature 1 (Autenticación y bootstrap). Este job pasa sin ejecutar lint/test."
