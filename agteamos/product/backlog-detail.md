@@ -106,10 +106,12 @@ Convención de dependencias: IDs de esta misma lista. "Ninguna" = puede empezar 
 
 **Valor entregado:** Epic K (notificaciones) puede enviar/recibir sin resolver primero el registro de dispositivo.
 
+> **Nota (2026-08-18):** un proyecto Firebase real (`google-services.json`) es requisito en Android fuera de Expo Go — no solo para AC#3, sino para el propio `getExpoPushTokenAsync` (AC#2), confirmado empíricamente en emulador. No hay atajo. Diferido a Epic K junto con el primer envío real de negocio; AC#2 se deja verificado por código/tests unitarios en esta tarea.
+
 **Acceptance Criteria:**
 1. La app solicita permiso de notificaciones con un mensaje de contexto antes del prompt nativo.
-2. Se obtiene un Expo push token válido y se loguea/guarda localmente para verificación manual en esta etapa.
-3. Una notificación de prueba enviada vía Expo push tool llega al dispositivo.
+2. ~~Se obtiene un Expo push token válido y se loguea/guarda localmente para verificación manual en esta etapa.~~ Implementado y cubierto por tests unitarios; verificación end-to-end en Android diferida a Epic K (requiere Firebase).
+3. ~~Una notificación de prueba enviada vía Expo push tool llega al dispositivo.~~ Diferido a Epic K.
 
 ---
 
@@ -754,6 +756,8 @@ Convención de dependencias: IDs de esta misma lista. "Ninguna" = puede empezar 
 ## Epic K — Notificaciones
 
 **Objetivo:** avisar a cada usuario de lo relevante para su rol, incluso si estuvo offline cuando se generó.
+
+> **Pendiente heredado de A5:** crear el proyecto Firebase real (`google-services.json`) antes o durante K2 — es requisito de Android para push fuera de Expo Go, diferido intencionalmente hasta este punto (ver `agteamos/changes/archive/*-6-push-notifications-wiring/progress.md`).
 
 ### K1. Schema y RLS de `notifications`
 **Como** sistema, **necesito** la tabla de notificaciones, **para** que cada usuario reciba solo las suyas.

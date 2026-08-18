@@ -36,13 +36,16 @@
         }
       ],
       "expo-localization",
+      "expo-notifications",
       "@lovesworking/watermelondb-expo-plugin-sdk-52-plus",
       [
         "expo-build-properties",
         {
           "android": {
             "packagingOptions": {
-              "pickFirst": ["**/libc++_shared.so"]
+              "pickFirst": [
+                "**/libc++_shared.so"
+              ]
             }
           }
         }
@@ -51,6 +54,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b51f33f7-fd22-4533-a60a-992cdb0db95f"
+      }
+    },
+    "owner": "oclaws-team"
   }
 }
