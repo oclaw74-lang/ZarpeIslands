@@ -13,10 +13,11 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
+import * as Linking from 'expo-linking';
 
 import { ThemedText } from '@/components/themed-text';
 import { BrandFont, Spacing } from '@/constants/theme';
-import { signIn } from '@/features/auth/api/authService';
+import { signIn, signInWithGoogle } from '@/features/auth/api/authService';
 
 // Paleta de agteamos/design/DESIGN_SYSTEM.md — Deep Ocean (primario).
 const PRIMARY = '#0B4F6C';
@@ -31,6 +32,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [googleSubmitting, setGoogleSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async () => {
@@ -47,6 +49,26 @@ export default function LoginScreen() {
     }
 
     setError(result.message === 'invalid-credentials' ? t('login.genericError') : t('login.unknownError'));
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError('');
+    setGoogleSubmitting(true);
+
+    const redirectTo = Linking.createURL('login');
+    const result = await signInWithGoogle(redirectTo);
+
+    setGoogleSubmitting(false);
+
+    if (result.ok) {
+      router.replace('/');
+      return;
+    }
+
+    // AC#3: cancelar el flujo de Google no debe mostrar un error falso.
+    if (result.message === 'cancelled') return;
+
+    setError(t('login.unknownError'));
   };
 
   return (
@@ -114,6 +136,29 @@ export default function LoginScreen() {
               <ThemedText type="link" style={styles.link}>
                 {t('login.forgotPassword')}
               </ThemedText>
+            </Pressable>
+
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+              <ThemedText type="small" style={styles.dividerText}>
+                {t('login.orDivider')}
+              </ThemedText>
+              <View style={styles.dividerLine} />
+            </View>
+
+            <Pressable
+              testID="login-google"
+              style={[styles.googleButton, googleSubmitting && styles.buttonDisabled]}
+              disabled={googleSubmitting}
+              onPress={handleGoogleSignIn}
+            >
+              {googleSubmitting ? (
+                <ActivityIndicator color={PRIMARY} />
+              ) : (
+                <ThemedText type="smallBold" style={styles.googleButtonText}>
+                  {t('login.continueWithGoogle')}
+                </ThemedText>
+              )}
             </Pressable>
           </View>
         </KeyboardAvoidingView>
@@ -201,5 +246,32 @@ const styles = StyleSheet.create({
   },
   error: {
     color: '#D64550',
+  },
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#D9E1E4',
+  },
+  dividerText: {
+    color: '#7C8B93',
+  },
+  googleButton: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#D9E1E4',
+    borderRadius: 14,
+    paddingVertical: Spacing.three,
+    minHeight: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  googleButtonText: {
+    color: '#0D2740',
+    fontSize: 16,
   },
 });

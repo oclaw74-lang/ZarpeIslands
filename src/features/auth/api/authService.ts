@@ -1,3 +1,5 @@
+import * as WebBrowser from 'expo-web-browser';
+
 import { supabase } from '@/lib/supabase/client';
 
 export type AuthResult = { ok: true } | { ok: false; message: string };
@@ -88,6 +90,46 @@ export function parseRecoveryTokensFromUrl(url: string): RecoveryTokens | null {
     accessToken: decodeURIComponent(accessTokenMatch[1]),
     refreshToken: decodeURIComponent(refreshTokenMatch[1]),
   };
+}
+
+/**
+ * OAuth con Google (B7). Supabase no soporta un deep link nativo directo en
+ * RN — el patrón es: pedirle a Supabase la URL de autorización sin que abra
+ * nada (`skipBrowserRedirect: true`), abrirla nosotros en el navegador del
+ * sistema con `expo-web-browser` (que sabe esperar el redirect de vuelta a
+ * nuestro esquema), y una vez que vuelve, parsear los tokens de la URL final
+ * igual que en el flujo de recovery de B1 (mismo formato de fragmento).
+ */
+export async function signInWithGoogle(redirectTo: string): Promise<AuthResult> {
+  if (!supabase) {
+    return { ok: false, message: 'missing-config' };
+  }
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo, skipBrowserRedirect: true },
+  });
+
+  if (error || !data.url) {
+    return { ok: false, message: error?.message ?? 'no-auth-url' };
+  }
+
+  const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
+
+  if (result.type === 'cancel' || result.type === 'dismiss') {
+    return { ok: false, message: 'cancelled' };
+  }
+
+  if (result.type !== 'success') {
+    return { ok: false, message: 'oauth-failed' };
+  }
+
+  const tokens = parseRecoveryTokensFromUrl(result.url);
+  if (!tokens) {
+    return { ok: false, message: 'no-tokens-in-callback' };
+  }
+
+  return setRecoverySession(tokens);
 }
 
 export async function setRecoverySession(tokens: RecoveryTokens): Promise<AuthResult> {

@@ -1,0 +1,23 @@
+id: "33-google-oauth-login"
+title: "B7. Login con Google (OAuth)"
+type: feature
+schema: lite
+context_tier: 1
+layer: frontend
+priority: medium
+status: done
+branch: feature/33-google-oauth-login
+platform: github
+ticket_url: https://github.com/oclaw74-lang/ZarpeIslands/issues/33
+domains: []
+doc_impact: false
+created: 2026-08-18
+updated: 2026-08-18
+owner:
+  name: "Claude Engineering"
+  email: "oclaw74@gmail.com"
+handoffs: []
+assigned_to:
+  - "@frontend-engineer"
+depends_on:
+  - "21-login-password-recovery"

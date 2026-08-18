@@ -58,6 +58,15 @@ describe('useAuthDeepLinkRedirect', () => {
     expect(mockReplace).not.toHaveBeenCalled();
   });
 
+  it('does not redirect for a Google OAuth callback URL, even with tokens (edge case / B7 race guard)', () => {
+    renderHook(() => useAuthDeepLinkRedirect());
+
+    const handler = (Linking.addEventListener as jest.Mock).mock.calls[0][1];
+    handler({ url: 'zarpeislands://login#access_token=abc&refresh_token=def&token_type=bearer' });
+
+    expect(mockReplace).not.toHaveBeenCalled();
+  });
+
   it('removes the event subscription on unmount (edge case)', () => {
     const { unmount } = renderHook(() => useAuthDeepLinkRedirect());
 

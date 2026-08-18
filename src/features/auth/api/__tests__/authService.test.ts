@@ -1,3 +1,5 @@
+import * as WebBrowser from 'expo-web-browser';
+
 import { supabase } from '@/lib/supabase/client';
 
 import {
@@ -6,6 +8,7 @@ import {
   requestPasswordReset,
   setRecoverySession,
   signIn,
+  signInWithGoogle,
   updatePassword,
 } from '@/features/auth/api/authService';
 
@@ -17,8 +20,13 @@ jest.mock('@/lib/supabase/client', () => ({
       updateUser: jest.fn(),
       getSession: jest.fn(),
       setSession: jest.fn(),
+      signInWithOAuth: jest.fn(),
     },
   },
+}));
+
+jest.mock('expo-web-browser', () => ({
+  openAuthSessionAsync: jest.fn(),
 }));
 
 const mockedAuth = (supabase as NonNullable<typeof supabase>).auth as jest.Mocked<
@@ -145,6 +153,56 @@ describe('parseRecoveryTokensFromUrl', () => {
 
   it('returns null when the URL has no tokens (error case)', () => {
     expect(parseRecoveryTokensFromUrl('zarpeislands://reset-password')).toBeNull();
+  });
+});
+
+describe('signInWithGoogle', () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  it('opens the auth session and establishes it from the callback URL (happy path)', async () => {
+    (mockedAuth.signInWithOAuth as jest.Mock).mockResolvedValue({
+      data: { url: 'https://provider.example/authorize' },
+      error: null,
+    });
+    (WebBrowser.openAuthSessionAsync as jest.Mock).mockResolvedValue({
+      type: 'success',
+      url: 'zarpeislands://login#access_token=abc&refresh_token=def',
+    });
+    (mockedAuth.setSession as jest.Mock).mockResolvedValue({ data: {}, error: null });
+
+    const result = await signInWithGoogle('zarpeislands://login');
+
+    expect(mockedAuth.signInWithOAuth).toHaveBeenCalledWith({
+      provider: 'google',
+      options: { redirectTo: 'zarpeislands://login', skipBrowserRedirect: true },
+    });
+    expect(mockedAuth.setSession).toHaveBeenCalledWith({ access_token: 'abc', refresh_token: 'def' });
+    expect(result).toEqual({ ok: true });
+  });
+
+  it('returns a distinct "cancelled" result when the user dismisses the browser (edge case / AC#3)', async () => {
+    (mockedAuth.signInWithOAuth as jest.Mock).mockResolvedValue({
+      data: { url: 'https://provider.example/authorize' },
+      error: null,
+    });
+    (WebBrowser.openAuthSessionAsync as jest.Mock).mockResolvedValue({ type: 'cancel' });
+
+    const result = await signInWithGoogle('zarpeislands://login');
+
+    expect(result).toEqual({ ok: false, message: 'cancelled' });
+    expect(mockedAuth.setSession).not.toHaveBeenCalled();
+  });
+
+  it('returns an error result when Supabase cannot produce an authorization URL (error case)', async () => {
+    (mockedAuth.signInWithOAuth as jest.Mock).mockResolvedValue({
+      data: { url: null },
+      error: { message: 'provider not enabled' },
+    });
+
+    const result = await signInWithGoogle('zarpeislands://login');
+
+    expect(result).toEqual({ ok: false, message: 'provider not enabled' });
+    expect(WebBrowser.openAuthSessionAsync).not.toHaveBeenCalled();
   });
 });
 
