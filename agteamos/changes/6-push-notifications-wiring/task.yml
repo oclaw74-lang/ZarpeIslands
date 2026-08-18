@@ -1,0 +1,24 @@
+id: "6-push-notifications-wiring"
+title: "A5. Wiring de push notifications"
+type: feature
+schema: full
+context_tier: 2
+layer: frontend
+priority: medium
+status: in_progress
+branch: feature/6-push-notifications-wiring
+platform: github
+ticket_url: https://github.com/oclaw74-lang/ZarpeIslands/issues/6
+domains: []
+doc_impact: true
+created: 2026-08-18
+updated: 2026-08-18
+owner:
+  name: "Claude Engineering"
+  email: "oclaw74@gmail.com"
+handoffs: []
+assigned_to:
+  - "@architect"
+  - "@frontend-engineer"
+depends_on:
+  - "2-init-expo-typescript"
