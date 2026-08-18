@@ -1,0 +1,25 @@
+id: "21-login-password-recovery"
+title: "B1. Login y recuperación de contraseña"
+type: feature
+schema: full
+context_tier: 2
+layer: frontend
+priority: high
+status: done
+branch: feature/21-login-password-recovery
+platform: github
+ticket_url: https://github.com/oclaw74-lang/ZarpeIslands/issues/21
+domains: []
+doc_impact: true
+created: 2026-08-18
+updated: 2026-08-18
+owner:
+  name: "Claude Engineering"
+  email: "oclaw74@gmail.com"
+handoffs: []
+assigned_to:
+  - "@architect"
+  - "@frontend-engineer"
+  - "@security-engineer"
+depends_on:
+  - "3-supabase-client-config"

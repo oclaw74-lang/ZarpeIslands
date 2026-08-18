@@ -3,6 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
+    "@expo-google-fonts/sora": "^0.4.2",
     "@expo/ui": "~57.0.11",
     "@lovesworking/watermelondb-expo-plugin-sdk-52-plus": "^1.0.3",
     "@nozbe/watermelondb": "^0.28.0",
@@ -76,7 +77,8 @@
       "<rootDir>/jest.setup.js"
     ],
     "moduleNameMapper": {
-      "\\.(css)$": "<rootDir>/src/__mocks__/styleMock.js"
+      "\\.(css)$": "<rootDir>/src/__mocks__/styleMock.js",
+      "^@/assets/(.*)$": "<rootDir>/assets/$1"
     }
   },
   "private": true
