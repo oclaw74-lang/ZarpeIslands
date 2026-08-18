@@ -8,7 +8,7 @@ Convención de dependencias: IDs de esta misma lista. "Ninguna" = puede empezar 
 
 ## Epic A — Project Foundation & Scaffold
 
-**Objetivo:** dejar el proyecto Expo/TypeScript andando, con Supabase, i18n, PowerSync y push notifications conectados, para que toda epic posterior construya sobre una base común — sin esto, ningún otro ticket puede empezar.
+**Objetivo:** dejar el proyecto Expo/TypeScript andando, con Supabase, i18n, WatermelonDB y push notifications conectados, para que toda epic posterior construya sobre una base común — sin esto, ningún otro ticket puede empezar.
 
 ### A1. Inicializar proyecto Expo + TypeScript
 **Como** equipo de desarrollo, **necesito** un proyecto Expo con TypeScript, linting y estructura de carpetas definida, **para** tener una base consistente donde construir cada feature.
@@ -72,22 +72,23 @@ Convención de dependencias: IDs de esta misma lista. "Ninguna" = puede empezar 
 
 ---
 
-### A4. PowerSync + esquema SQLite local
+### A4. WatermelonDB + esquema SQLite local
 **Como** personal de barco, **necesito** que la app tenga una base de datos local que funcione sin señal, **para** poder ponchar/registrar propinas en altamar y que se sincronice después.
 
 - Depende de: A2
-- Fuente: `documents/02` sección 2.3, `documents/05` sección 1 (offline-friendly) y sección 5
+- Fuente: `documents/02` sección 2.3, `documents/05` sección 1 (offline-friendly) y sección 5, [ADR-004](../architecture/adr/ADR-004-offline-sync-watermelondb.md) (reemplaza PowerSync de ADR-001 por costo)
 
 **Reglas de negocio / notas técnicas:**
-- PowerSync conectado a Supabase; esquema SQLite local espejo de las tablas que se editan offline: `punches`, `tips`, `requests` (ver `documents/05` sección 5).
-- Reglas de sincronización limitadas al propio `company_member_id` — el teléfono no descarga toda la base de la empresa, solo lo que le corresponde a esa persona.
-- Resolución de conflictos por defecto: "gana el último cambio", con registro de auditoría de ambos intentos (queda para Epic D/G implementar el detalle en cada tabla, acá solo el mecanismo base).
+- WatermelonDB (SQLite local reactivo) + sync propio contra Supabase vía funciones Postgres `push`/`pull` (RPC) — no un servicio de sync de terceros.
+- Se adelanta el schema real de `companies`, `company_members` (mínimo para FK) y `punches` como parte de este ticket (decisión del usuario, 2026-08-18) para poder probar el mecanismo end-to-end contra una tabla real, en vez de una tabla de prueba descartable. `tips`/`requests` siguen creándose en sus tickets propios (F1/G1) cuando les toque.
+- Reglas de sincronización limitadas al propio `company_member_id` — el `pull()` solo devuelve filas del usuario autenticado, no de toda la empresa.
+- Resolución de conflictos: "gana el último cambio" (last-write-wins) dentro de la función `push()`.
 
 **Valor entregado:** desbloquea Epic D (ponche offline) y partes de Epic F/G que dependen de escritura local-first.
 
 **Acceptance Criteria:**
-1. Con el dispositivo en modo avión, una escritura de prueba a una tabla local (ej. `punches`) se guarda y es legible localmente de inmediato.
-2. Al recuperar conexión, la escritura pendiente se sincroniza a Supabase automáticamente, sin acción manual del usuario.
+1. Con el dispositivo en modo avión, una escritura de prueba a `punches` (WatermelonDB local) se guarda y es legible localmente de inmediato.
+2. Al recuperar conexión, la escritura pendiente se sincroniza a Supabase (`punches` real) automáticamente, sin acción manual del usuario.
 3. Las reglas de sync están limitadas por `company_member_id` — un usuario no descarga localmente datos de otro compañero.
 
 ---
@@ -266,7 +267,7 @@ Convención de dependencias: IDs de esta misma lista. "Ninguna" = puede empezar 
 **Acceptance Criteria:**
 1. Tabla con `company_id`, `company_member_id`, `boat_assignment_id` (nulable), `punch_type` (`in`/`out`), `device_timestamp`, `synced_at`, `latitude`/`longitude` (opcionales), `created_offline`, `flagged_out_of_schedule`.
 2. RLS: Crew solo ve/crea sus propios ponches; Encargado ve los de su personal asignado; Owner/Manager ven todos; Secretaría solo lectura.
-3. Incluida en las reglas de sincronización de PowerSync de A4 limitadas a `company_member_id`.
+3. Incluida en las reglas de sincronización de WatermelonDB de A4 limitadas a `company_member_id`.
 
 ---
 

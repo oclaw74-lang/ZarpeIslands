@@ -11,7 +11,7 @@ Zarpe Islands (nombre provisional) es una app de gestión operativa para negocio
 
 ```mermaid
 flowchart TD
-    A[App móvil<br/>React Native + Expo] -->|lee/escribe primero| B[(SQLite local<br/>PowerSync)]
+    A[App móvil<br/>React Native + Expo] -->|lee/escribe primero| B[(SQLite local<br/>WatermelonDB)]
     B -->|sync al recuperar señal| C[Supabase]
     C --> D[(Postgres + RLS)]
     C --> E[Supabase Auth]
@@ -32,7 +32,7 @@ Patrón: **offline-first móvil + BaaS multi-tenant**. La app nunca depende de t
 | App móvil | React Native + Expo | Un solo código para Android/tablet/iOS; aprovecha experiencia previa del equipo con React + Supabase |
 | Backend/DB | Supabase (Postgres, Auth, Storage, Edge Functions, Realtime) | BaaS completo, evita mantener backend propio para el MVP |
 | Seguridad multi-tenant | Row Level Security (RLS) por `company_id` | Aislamiento de datos entre empresas sin bases de datos separadas |
-| Sync offline | PowerSync + SQLite local | Evita construir sincronización a mano; resuelve el punto más delicado del proyecto (ponche/propinas en altamar sin señal) |
+| Sync offline | WatermelonDB + SQLite local, sync propio (`push`/`pull` vía RPC en Postgres) | Gratis y sin dependencia de un servicio de pago (ver ADR-004 — reemplaza la decisión original de PowerSync por costo); resuelve el punto más delicado del proyecto (ponche/propinas en altamar sin señal) |
 | Notificaciones | Expo Notifications / Firebase Cloud Messaging | Recordatorios de turno/mantenimiento, entregados al recuperar señal |
 | Documentos/facturas | PDF vía Edge Function | Reutiliza enfoque ya usado en otro proyecto del equipo (PunchBot) |
 | i18n | i18next / react-i18next | Inglés como base del código, español incluido desde el día uno |

@@ -19,7 +19,7 @@ Interfaz en inglés como idioma base, con soporte multilenguaje (i18n) desde el 
 | App móvil | React Native + Expo (Android → tablet → iOS) |
 | Backend / DB | Supabase (Postgres, Auth, Storage, Edge Functions, Realtime) |
 | Seguridad multi-tenant | Row Level Security (RLS) por `company_id` |
-| Sincronización offline | PowerSync + SQLite local |
+| Sincronización offline | WatermelonDB + SQLite local (sync propio vía RPC en Postgres) |
 | Notificaciones | Expo Notifications / Firebase Cloud Messaging |
 | Documentos/facturas | PDF generado vía Edge Function |
 

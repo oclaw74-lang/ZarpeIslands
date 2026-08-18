@@ -34,7 +34,7 @@ Una feature del MVP se considera terminada cuando:
 
 1. Cumple los criterios de aceptación definidos en su ticket de GitHub.
 2. Respeta la matriz de permisos y las políticas RLS correspondientes (`documents/04`, `documents/05`).
-3. Si toca datos editados desde el barco (ponche, propina, solicitud), funciona offline y sincroniza correctamente vía PowerSync.
+3. Si toca datos editados desde el barco (ponche, propina, solicitud), funciona offline y sincroniza correctamente vía WatermelonDB (ver ADR-004).
 4. Tiene tests (unitarios como mínimo; E2E para flujos críticos como ponche y aprobación de solicitudes).
 5. Pasa CI (lint + tests) antes de mergear.
 6. Está documentada si introduce una decisión arquitectónica nueva (ADR) o cambia el modelo de datos.
