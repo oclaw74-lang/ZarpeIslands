@@ -1,0 +1,12 @@
+{
+  "onboarding": {
+    "settingUpTitle": "Setting up your company…",
+    "settingUpBody": "Just a moment while we get {{companyName}} ready.",
+    "manualTitle": "Name your company",
+    "manualInstructions": "We need a name for your business before you can continue.",
+    "companyNameLabel": "Company name",
+    "submit": "Create company",
+    "errorTitle": "Something went wrong",
+    "retry": "Try again"
+  }
+}

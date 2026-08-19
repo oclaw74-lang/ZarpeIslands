@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import * as Linking from 'expo-linking';
 import { useRouter } from 'expo-router';
 
-import { parseRecoveryTokensFromUrl } from '@/features/auth/api/authService';
+import { parseRecoveryTokensFromUrl, setRecoverySession } from '@/features/auth/api/authService';
 
 /**
  * Maneja el deep link de recuperación de Supabase
@@ -23,23 +23,33 @@ import { parseRecoveryTokensFromUrl } from '@/features/auth/api/authService';
  * (confirmado con un deep link real en emulador: sin este hook, la screen
  * mostraba "link inválido" incluso con tokens de Supabase genuinos).
  *
- * Solo redirige si la URL trae `type=recovery` (B7): el login con Google
- * también recibe una URL con `access_token`/`refresh_token` en el fragmento
- * al volver de `WebBrowser.openAuthSessionAsync`, pero esa promesa ya
- * resuelve el flujo completo dentro de `authService.signInWithGoogle` — si
- * este listener global también la agarrara, redirigiría a
- * `/reset-password` por encima de la navegación a Home que hace
- * `LoginScreen`, una carrera real entre dos código que procesan la misma URL.
+ * Solo redirige para `type=recovery` o `type=signup` (B1/B2): el login con
+ * Google (B7) también recibe una URL con `access_token`/`refresh_token` en
+ * el fragmento al volver de `WebBrowser.openAuthSessionAsync`, pero esa
+ * promesa ya resuelve el flujo completo dentro de
+ * `authService.signInWithGoogle` — si este listener global también la
+ * agarrara, competiría con la navegación a Home que hace `LoginScreen`.
+ *
+ * `type=signup` (B2, link de confirmación de registro) establece la sesión y
+ * manda a `/` — el gate de `index.tsx` decide desde ahí si corresponde
+ * `/onboarding` (todavía sin `company_members`) o Home.
  */
 export function useAuthDeepLinkRedirect() {
   const router = useRouter();
 
   useEffect(() => {
     function handleUrl(url: string) {
-      if (!url.includes('type=recovery')) return;
+      const isRecovery = url.includes('type=recovery');
+      const isSignup = url.includes('type=signup');
+      if (!isRecovery && !isSignup) return;
 
       const tokens = parseRecoveryTokensFromUrl(url);
       if (!tokens) return;
+
+      if (isSignup) {
+        setRecoverySession(tokens).then(() => router.replace('/'));
+        return;
+      }
 
       router.replace({
         pathname: '/reset-password',
