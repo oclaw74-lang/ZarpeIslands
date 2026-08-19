@@ -1,6 +1,8 @@
 {
   "list": {
     "title": "Job positions",
+    "count": "{{count}} position configured",
+    "count_other": "{{count}} positions configured",
     "empty": "No job positions yet.",
     "createButton": "Add position",
     "requiredPerShift": "Required every shift",

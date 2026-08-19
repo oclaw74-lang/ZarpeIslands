@@ -163,9 +163,60 @@ real de `react-native-worklets` (arquitectura nueva de Reanimated 4) y no corre
 en Node. El mock propio cubre solo las APIs usadas: `useSharedValue`,
 `useAnimatedStyle`, `withTiming`, `Animated.View`, `Animated.createAnimatedComponent`, `FadeInDown`.
 
-## Pendiente / próximos pasos
+## Pendiente / próximos pasos (post UI-2)
 
 - Migrar `BoatFormScreen`/`JobPositionFormScreen` a `AppButton` (fuera de
-  alcance de UI-1, quedó con los selectores de pill existentes).
+  alcance de UI-1/UI-2, quedó con los selectores de pill existentes).
 - Todo dominio nuevo (B4 Staff, D Ponche, etc.) debe usar estos componentes
   desde el inicio, no reinventar filas con `StyleSheet` suelto.
+
+---
+
+# UI-2: Header con color, profundidad y stats (2026-08-19)
+
+**Ticket**: [#40](https://github.com/oclaw74-lang/ZarpeIslands/issues/40)
+
+## Por qué
+
+Feedback del usuario tras ver UI-1 corriendo en el emulador: *"sigue sin
+gustarme el ui de la app, lo veo como muy básico... no lo siento como una app
+real, mas bien como una nota"*. Antes de tocar código se validó una dirección
+nueva con un mockup (Artifact HTML, no en el repo) mostrando Home/Boats con
+header de color, cards con profundidad/foto y tipografía con carácter — el
+usuario aprobó la dirección y, en una segunda iteración del mockup comparando
+Sora/Space Grotesk/Manrope, confirmó **Sora** (ya es la tipografía de marca
+desde B1, sin necesidad de cargar una fuente nueva).
+
+## Qué cambió
+
+- **`PageHero`** (`src/components/ui/PageHero.tsx`): header con degradé de
+  marca (`expo-linear-gradient`, nueva dependencia — requiere rebuild nativo,
+  no alcanza con reload de Metro), título, subtítulo y fila de stats opcional.
+  Reemplaza el título plano suelto de UI-1 en Home/Boats/Job positions.
+- **`StatChip`**: chip de stat (número + etiqueta) para la fila de stats del
+  hero — usado en Home con conteos reales de barcos/puestos (`Alerts` queda
+  fijo en 0, es un placeholder visual hasta que exista esa feature).
+- **`Fab`**: botón flotante de acción principal (mismo patrón de animación de
+  presión que `AppButton`) — reemplaza el botón ancho arriba de las listas.
+- **`PhotoStrip`**: franja de color/degradé con el nombre superpuesto en la
+  card de cada barco (`BoatPhotoGradients`, cíclico por índice — no hay fotos
+  reales de barcos todavía).
+- **Nuevos tokens** en `theme.ts`: `Accent` (colores de degradé/coral,
+  distintos de los `Palette.success/warning/danger` semánticos) y
+  `BoatPhotoGradients`. Nuevos tipos de `ThemedText`: `heroTitle`,
+  `sectionTitle`, `statNumber` (todos Sora bold, tamaños para header/stats).
+
+## Aplicado en
+
+- `HomeScreen`: hero con stats reales de barcos/puestos (fetch en
+  `useFocusEffect`, no bloquea si falla).
+- `BoatsListScreen`: hero + `PhotoStrip` por card + `Fab`.
+- `JobPositionsListScreen`: hero + `Fab` (cards se mantienen igual que UI-1,
+  sin franja de foto — eso es específico de barcos).
+
+## Gotcha de esta iteración
+
+`expo-linear-gradient` es un módulo nativo — instalarlo con `npx expo install`
+no alcanza para verlo en el dev client ya instalado; hace falta
+`npx expo run:android` (rebuild + reinstall del APK) antes de que el degradé
+funcione, si no la app crashea con `Can't find ViewManager ... ExpoLinearGradient`.

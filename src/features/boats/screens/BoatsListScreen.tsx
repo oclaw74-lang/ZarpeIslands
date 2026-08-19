@@ -7,12 +7,13 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { AnimatedListItem } from '@/components/ui/AnimatedListItem';
-import { AppButton } from '@/components/ui/AppButton';
 import { Badge, BadgeTone } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { IconCircle } from '@/components/ui/IconCircle';
-import { Palette, Spacing } from '@/constants/theme';
+import { Fab } from '@/components/ui/Fab';
+import { PageHero } from '@/components/ui/PageHero';
+import { PhotoStrip } from '@/components/ui/PhotoStrip';
+import { BoatPhotoGradients, Palette, Spacing } from '@/constants/theme';
 import { Boat, BoatStatus, listBoats } from '@/features/boats/api/boatService';
 import { getCompanyMembership } from '@/features/company/api/companyService';
 
@@ -29,8 +30,9 @@ const STATUS_TONE: Record<BoatStatus, BadgeTone> = {
  * `includeInactive` en false por default demuestra AC#2 (los inactivos
  * quedan afuera de la vista salvo que se pidan explícitamente).
  *
- * UI-1: filas migradas a `Card` + ícono de barco (`IconCircle`) + `Badge`
- * de estado, con animación de entrada escalonada (`AnimatedListItem`).
+ * UI-2: header con degradé (`PageHero`) + franja de color por barco
+ * (`PhotoStrip`, cíclica por índice) + FAB en vez del botón ancho de UI-1,
+ * en respuesta al feedback de que la lista se sentía "plana"/"como una nota".
  */
 export default function BoatsListScreen() {
   const { t } = useTranslation('boats');
@@ -62,52 +64,59 @@ export default function BoatsListScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.header}>
-          <ThemedText type="title">{t('list.title')}</ThemedText>
-          <Pressable testID="boats-toggle-inactive" onPress={() => setIncludeInactive((prev) => !prev)}>
-            <ThemedText type="link">
-              {includeInactive ? t('list.hideInactive') : t('list.showInactive')}
-            </ThemedText>
-          </Pressable>
+      <SafeAreaView style={styles.safeArea} edges={['top']}>
+        <PageHero
+          title={t('list.title')}
+          subtitle={t('list.fleetCount', { count: boats.length })}
+          headerRight={
+            <Pressable testID="boats-toggle-inactive" onPress={() => setIncludeInactive((prev) => !prev)}>
+              <ThemedText type="small" style={styles.toggle}>
+                {includeInactive ? t('list.hideInactive') : t('list.showInactive')}
+              </ThemedText>
+            </Pressable>
+          }
+        />
+
+        <View style={styles.body}>
+          {loading ? (
+            <ActivityIndicator color={Palette.primary} style={styles.loading} />
+          ) : boats.length === 0 ? (
+            <EmptyState testID="boats-empty" icon="boat-outline" title={t('list.empty')} />
+          ) : (
+            <FlatList
+              data={boats}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.list}
+              renderItem={({ item, index }) => (
+                <AnimatedListItem index={index}>
+                  <Pressable
+                    testID={`boat-row-${item.id}`}
+                    disabled={!canManage}
+                    onPress={() => canManage && router.push(`/boats/${item.id}/edit`)}
+                  >
+                    <Card style={styles.card} flat={false}>
+                      <PhotoStrip
+                        title={item.name}
+                        gradient={BoatPhotoGradients[index % BoatPhotoGradients.length]}
+                      />
+                      <View style={styles.info}>
+                        {item.registrationNumber ? (
+                          <ThemedText type="small">{item.registrationNumber}</ThemedText>
+                        ) : (
+                          <View />
+                        )}
+                        <Badge tone={STATUS_TONE[item.status]} label={t(`list.status${statusKey(item.status)}`)} />
+                      </View>
+                    </Card>
+                  </Pressable>
+                </AnimatedListItem>
+              )}
+            />
+          )}
         </View>
 
         {canManage && (
-          <AppButton testID="boats-create" label={t('list.createButton')} onPress={() => router.push('/boats/new')} />
-        )}
-
-        {loading ? (
-          <ActivityIndicator color={Palette.primary} style={styles.loading} />
-        ) : boats.length === 0 ? (
-          <EmptyState testID="boats-empty" icon="boat-outline" title={t('list.empty')} />
-        ) : (
-          <FlatList
-            data={boats}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.list}
-            renderItem={({ item, index }) => (
-              <AnimatedListItem index={index}>
-                <Pressable
-                  testID={`boat-row-${item.id}`}
-                  disabled={!canManage}
-                  onPress={() => canManage && router.push(`/boats/${item.id}/edit`)}
-                >
-                  <Card style={styles.row}>
-                    <IconCircle name="boat" />
-                    <View style={styles.rowBody}>
-                      <View style={styles.rowHeader}>
-                        <ThemedText type="smallBold">{item.name}</ThemedText>
-                        <Badge tone={STATUS_TONE[item.status]} label={t(`list.status${statusKey(item.status)}`)} />
-                      </View>
-                      {item.registrationNumber && (
-                        <ThemedText type="small">{item.registrationNumber}</ThemedText>
-                      )}
-                    </View>
-                  </Card>
-                </Pressable>
-              </AnimatedListItem>
-            )}
-          />
+          <Fab testID="boats-create" onPress={() => router.push('/boats/new')} />
         )}
       </SafeAreaView>
     </ThemedView>
@@ -124,34 +133,30 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+  },
+  toggle: {
+    color: 'rgba(255,255,255,0.85)',
+  },
+  body: {
+    flex: 1,
     paddingHorizontal: Spacing.four,
     paddingTop: Spacing.three,
-    gap: Spacing.three,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
   },
   loading: {
     marginTop: Spacing.five,
   },
   list: {
-    gap: Spacing.two,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
     gap: Spacing.three,
+    paddingBottom: Spacing.six,
   },
-  rowBody: {
-    flex: 1,
-    gap: Spacing.half,
+  card: {
+    padding: 0,
+    overflow: 'hidden',
   },
-  rowHeader: {
+  info: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.two,
-    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    padding: Spacing.three,
   },
 });

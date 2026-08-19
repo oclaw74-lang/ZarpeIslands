@@ -44,6 +44,31 @@ export const Palette = {
   surfaceElevated: '#FFFFFF',
 } as const;
 
+/**
+ * Acentos de marca (UI-2) — distintos de los `Palette.success/warning/danger`
+ * semánticos de arriba. Se usan en superficies grandes (header degradé,
+ * franja de foto de barco), no en badges de estado. Ver
+ * `agteamos/design/DESIGN_SYSTEM.md` § UI-2 y el mockup aprobado por el
+ * usuario (header con color + cards con profundidad, tipografía Sora).
+ */
+export const Accent = {
+  heroFrom: '#0A3247',
+  heroVia: '#0E4A66',
+  heroTo: '#1F8F80',
+  coral: '#FF7A50',
+  coralDark: '#E85F35',
+  coralTint: '#FFE4D8',
+  tealBright: '#2FB8A6',
+  tealTint: '#DAF3EF',
+} as const;
+
+/** Pares de degradé para franjas de foto de barco — cíclicos por índice, no por dato real (sin fotos reales todavía). */
+export const BoatPhotoGradients: readonly [string, string][] = [
+  [Accent.tealBright, Palette.primary],
+  [Palette.warning, Accent.coralDark],
+  [Palette.primary, Accent.heroFrom],
+];
+
 export const Radius = {
   small: 8,
   medium: 12,

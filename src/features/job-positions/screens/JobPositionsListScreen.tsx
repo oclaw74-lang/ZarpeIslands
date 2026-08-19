@@ -7,11 +7,12 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { AnimatedListItem } from '@/components/ui/AnimatedListItem';
-import { AppButton } from '@/components/ui/AppButton';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { Fab } from '@/components/ui/Fab';
 import { IconCircle } from '@/components/ui/IconCircle';
+import { PageHero } from '@/components/ui/PageHero';
 import { Palette, Spacing } from '@/constants/theme';
 import { JobPosition, listJobPositions } from '@/features/job-positions/api/jobPositionService';
 import { getCompanyMembership } from '@/features/company/api/companyService';
@@ -21,8 +22,7 @@ import { getCompanyMembership } from '@/features/company/api/companyService';
  * crear la empresa (trigger en la migración, AC#1) — esta lista no crea
  * ese default, solo lo muestra y permite editar/agregar (owner/manager).
  *
- * UI-1: filas migradas a `Card` + ícono (`IconCircle`) + `Badge`s de flags,
- * con animación de entrada escalonada (`AnimatedListItem`).
+ * UI-2: header con degradé (`PageHero`) + FAB en vez del botón ancho de UI-1.
  */
 export default function JobPositionsListScreen() {
   const { t } = useTranslation('jobPositions');
@@ -50,52 +50,48 @@ export default function JobPositionsListScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedText type="title">{t('list.title')}</ThemedText>
+      <SafeAreaView style={styles.safeArea} edges={['top']}>
+        <PageHero title={t('list.title')} subtitle={t('list.count', { count: positions.length })} />
 
-        {canManage && (
-          <AppButton
-            testID="job-positions-create"
-            label={t('list.createButton')}
-            onPress={() => router.push('/job-positions/new')}
-          />
-        )}
-
-        {loading ? (
-          <ActivityIndicator color={Palette.primary} style={styles.loading} />
-        ) : positions.length === 0 ? (
-          <EmptyState testID="job-positions-empty" icon="briefcase-outline" title={t('list.empty')} />
-        ) : (
-          <FlatList
-            data={positions}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.list}
-            renderItem={({ item, index }) => (
-              <AnimatedListItem index={index}>
-                <Pressable
-                  testID={`job-position-row-${item.id}`}
-                  disabled={!canManage}
-                  onPress={() => canManage && router.push(`/job-positions/${item.id}/edit`)}
-                >
-                  <Card style={styles.row}>
-                    <IconCircle name="briefcase" />
-                    <View style={styles.rowBody}>
-                      <ThemedText type="smallBold">{item.name}</ThemedText>
-                      <View style={styles.badgeRow}>
-                        {item.isRequiredPerShift && (
-                          <Badge tone="primary" label={t('list.requiredPerShift')} />
-                        )}
-                        {item.rotationRepeatAllowed && (
-                          <Badge tone="neutral" label={t('list.rotationRepeatAllowed')} />
-                        )}
+        <View style={styles.body}>
+          {loading ? (
+            <ActivityIndicator color={Palette.primary} style={styles.loading} />
+          ) : positions.length === 0 ? (
+            <EmptyState testID="job-positions-empty" icon="briefcase-outline" title={t('list.empty')} />
+          ) : (
+            <FlatList
+              data={positions}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.list}
+              renderItem={({ item, index }) => (
+                <AnimatedListItem index={index}>
+                  <Pressable
+                    testID={`job-position-row-${item.id}`}
+                    disabled={!canManage}
+                    onPress={() => canManage && router.push(`/job-positions/${item.id}/edit`)}
+                  >
+                    <Card style={styles.row}>
+                      <IconCircle name="briefcase" />
+                      <View style={styles.rowBody}>
+                        <ThemedText type="smallBold">{item.name}</ThemedText>
+                        <View style={styles.badgeRow}>
+                          {item.isRequiredPerShift && (
+                            <Badge tone="primary" label={t('list.requiredPerShift')} />
+                          )}
+                          {item.rotationRepeatAllowed && (
+                            <Badge tone="neutral" label={t('list.rotationRepeatAllowed')} />
+                          )}
+                        </View>
                       </View>
-                    </View>
-                  </Card>
-                </Pressable>
-              </AnimatedListItem>
-            )}
-          />
-        )}
+                    </Card>
+                  </Pressable>
+                </AnimatedListItem>
+              )}
+            />
+          )}
+        </View>
+
+        {canManage && <Fab testID="job-positions-create" onPress={() => router.push('/job-positions/new')} />}
       </SafeAreaView>
     </ThemedView>
   );
@@ -107,15 +103,18 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+  },
+  body: {
+    flex: 1,
     paddingHorizontal: Spacing.four,
     paddingTop: Spacing.three,
-    gap: Spacing.three,
   },
   loading: {
     marginTop: Spacing.five,
   },
   list: {
     gap: Spacing.two,
+    paddingBottom: Spacing.six,
   },
   row: {
     flexDirection: 'row',

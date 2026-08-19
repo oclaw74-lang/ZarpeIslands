@@ -1,6 +1,8 @@
 {
   "list": {
     "title": "Boats",
+    "fleetCount": "{{count}} boat in your fleet",
+    "fleetCount_other": "{{count}} boats in your fleet",
     "empty": "No boats yet.",
     "createButton": "Add boat",
     "showInactive": "Show inactive",
