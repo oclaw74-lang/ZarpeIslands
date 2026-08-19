@@ -27,7 +27,7 @@ Este es el backlog de producto de ESTE proyecto (no confundir con el `BACKLOG.md
 | J | Documentos y facturación | 4 | `backlog` | — |
 | K | Notificaciones | 4 | `backlog` | — |
 | M | QA & Launch Readiness | 3 | `backlog` | — |
-| UI | Sistema de diseño / modernización visual (ad hoc) | 1 (1/1 done) | `done` | UI-1: ✅ [#38](https://github.com/oclaw74-lang/ZarpeIslands/issues/38)/PR [#39](https://github.com/oclaw74-lang/ZarpeIslands/pull/39) — agregado a pedido del usuario, ver [ADR-005](../architecture/adr/ADR-005-ui-design-system.md) |
+| UI | Sistema de diseño / modernización visual (ad hoc) | 2 (2/2 done) | `done` | UI-1: ✅ [#38](https://github.com/oclaw74-lang/ZarpeIslands/issues/38)/PR [#39](https://github.com/oclaw74-lang/ZarpeIslands/pull/39) — agregado a pedido del usuario, ver [ADR-005](../architecture/adr/ADR-005-ui-design-system.md). UI-2: ✅ [#40](https://github.com/oclaw74-lang/ZarpeIslands/issues/40)/PR [#41](https://github.com/oclaw74-lang/ZarpeIslands/pull/41) — iteración tras feedback de que UI-1 seguía "básico" (header con color, profundidad, stats), dirección validada con mockup antes de implementar |
 
 Estados posibles: `backlog` (solo documentado acá) → `in_github` (issues creados, epic en curso) → `done` (epic cerrada y mergeada).
 
