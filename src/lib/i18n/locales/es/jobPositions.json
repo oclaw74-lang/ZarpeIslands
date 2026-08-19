@@ -1,6 +1,8 @@
 {
   "list": {
     "title": "Puestos de trabajo",
+    "count": "{{count}} puesto configurado",
+    "count_other": "{{count}} puestos configurados",
     "empty": "Todavía no hay puestos.",
     "createButton": "Agregar puesto",
     "requiredPerShift": "Obligatorio en cada turno",

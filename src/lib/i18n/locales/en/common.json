@@ -1,7 +1,10 @@
 {
   "appName": "Zarpe Islands",
   "home": {
-    "scaffoldStatus": "Project scaffold — Epic A in progress"
+    "scaffoldStatus": "Project scaffold — Epic A in progress",
+    "statBoats": "Boats",
+    "statPositions": "Positions",
+    "statAlerts": "Alerts"
   },
   "language": {
     "toggleLabel": "Switch language",
