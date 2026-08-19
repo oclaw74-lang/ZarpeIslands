@@ -1,0 +1,24 @@
+id: "38-ui-design-system"
+title: "UI-1. Sistema de diseño propio (modernización visual)"
+type: feature
+schema: full
+context_tier: 2
+layer: frontend
+priority: medium
+status: in_progress
+branch: feature/38-ui-design-system
+platform: github
+ticket_url: https://github.com/oclaw74-lang/ZarpeIslands/issues/38
+domains:
+  - design-system
+doc_impact: true
+created: 2026-08-19
+updated: 2026-08-19
+owner:
+  name: "Claude Engineering"
+  email: "oclaw74@gmail.com"
+handoffs: []
+assigned_to:
+  - "@ui-ux-designer"
+  - "@frontend-engineer"
+depends_on: []

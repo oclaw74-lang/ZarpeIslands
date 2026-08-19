@@ -26,6 +26,42 @@ export const Colors = {
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
+/**
+ * Paleta de marca — extraída de las pantallas de auth (B1/B2), formalizada
+ * acá para que todo componente nuevo del sistema de diseño (UI-1) la use en
+ * vez de repetir hex sueltos. Ver `agteamos/design/DESIGN_SYSTEM.md`.
+ */
+export const Palette = {
+  primary: '#0B4F6C',
+  primaryDark: '#0D2740',
+  accent: '#3c87f7',
+  success: '#2E8B57',
+  warning: '#E9B44C',
+  danger: '#D64550',
+  neutralLine: '#D9E1E4',
+  neutralMuted: '#7C8B93',
+  surface: '#F3F6F7',
+  surfaceElevated: '#FFFFFF',
+} as const;
+
+export const Radius = {
+  small: 8,
+  medium: 12,
+  large: 16,
+  pill: 999,
+} as const;
+
+/** Sombra suave 2026-style — usar en Card/AppButton, no en textos ni íconos. */
+export const Shadow = {
+  soft: {
+    shadowColor: '#0D2740',
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
+  },
+} as const;
+
 export const Fonts = Platform.select({
   ios: {
     /** iOS `UIFontDescriptorSystemDesignDefault` */

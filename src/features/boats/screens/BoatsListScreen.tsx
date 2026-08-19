@@ -6,15 +6,20 @@ import { useFocusEffect, useRouter } from 'expo-router';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
+import { AnimatedListItem } from '@/components/ui/AnimatedListItem';
+import { AppButton } from '@/components/ui/AppButton';
+import { Badge, BadgeTone } from '@/components/ui/Badge';
+import { Card } from '@/components/ui/Card';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { IconCircle } from '@/components/ui/IconCircle';
+import { Palette, Spacing } from '@/constants/theme';
 import { Boat, BoatStatus, listBoats } from '@/features/boats/api/boatService';
 import { getCompanyMembership } from '@/features/company/api/companyService';
 
-const PRIMARY = '#0B4F6C';
-const STATUS_COLORS: Record<BoatStatus, string> = {
-  active: '#2E8B57',
-  in_maintenance: '#E9B44C',
-  inactive: '#6C8791',
+const STATUS_TONE: Record<BoatStatus, BadgeTone> = {
+  active: 'success',
+  in_maintenance: 'warning',
+  inactive: 'neutral',
 };
 
 /**
@@ -23,6 +28,9 @@ const STATUS_COLORS: Record<BoatStatus, string> = {
  * `getCompanyMembership()`, no hace falta esperar al routing por rol de B3.
  * `includeInactive` en false por default demuestra AC#2 (los inactivos
  * quedan afuera de la vista salvo que se pidan explícitamente).
+ *
+ * UI-1: filas migradas a `Card` + ícono de barco (`IconCircle`) + `Badge`
+ * de estado, con animación de entrada escalonada (`AnimatedListItem`).
  */
 export default function BoatsListScreen() {
   const { t } = useTranslation('boats');
@@ -65,44 +73,39 @@ export default function BoatsListScreen() {
         </View>
 
         {canManage && (
-          <Pressable
-            testID="boats-create"
-            style={styles.createButton}
-            onPress={() => router.push('/boats/new')}
-          >
-            <ThemedText type="smallBold" style={styles.createButtonText}>
-              {t('list.createButton')}
-            </ThemedText>
-          </Pressable>
+          <AppButton testID="boats-create" label={t('list.createButton')} onPress={() => router.push('/boats/new')} />
         )}
 
         {loading ? (
-          <ActivityIndicator color={PRIMARY} style={styles.loading} />
+          <ActivityIndicator color={Palette.primary} style={styles.loading} />
         ) : boats.length === 0 ? (
-          <ThemedText testID="boats-empty" type="small" style={styles.empty}>
-            {t('list.empty')}
-          </ThemedText>
+          <EmptyState testID="boats-empty" icon="boat-outline" title={t('list.empty')} />
         ) : (
           <FlatList
             data={boats}
             keyExtractor={(item) => item.id}
             contentContainerStyle={styles.list}
-            renderItem={({ item }) => (
-              <Pressable
-                testID={`boat-row-${item.id}`}
-                style={styles.row}
-                disabled={!canManage}
-                onPress={() => canManage && router.push(`/boats/${item.id}/edit`)}
-              >
-                <View style={styles.rowHeader}>
-                  <ThemedText type="smallBold">{item.name}</ThemedText>
-                  <View style={[styles.statusDot, { backgroundColor: STATUS_COLORS[item.status] }]} />
-                  <ThemedText type="small">{t(`list.status${statusKey(item.status)}`)}</ThemedText>
-                </View>
-                {item.registrationNumber && (
-                  <ThemedText type="small">{item.registrationNumber}</ThemedText>
-                )}
-              </Pressable>
+            renderItem={({ item, index }) => (
+              <AnimatedListItem index={index}>
+                <Pressable
+                  testID={`boat-row-${item.id}`}
+                  disabled={!canManage}
+                  onPress={() => canManage && router.push(`/boats/${item.id}/edit`)}
+                >
+                  <Card style={styles.row}>
+                    <IconCircle name="boat" />
+                    <View style={styles.rowBody}>
+                      <View style={styles.rowHeader}>
+                        <ThemedText type="smallBold">{item.name}</ThemedText>
+                        <Badge tone={STATUS_TONE[item.status]} label={t(`list.status${statusKey(item.status)}`)} />
+                      </View>
+                      {item.registrationNumber && (
+                        <ThemedText type="small">{item.registrationNumber}</ThemedText>
+                      )}
+                    </View>
+                  </Card>
+                </Pressable>
+              </AnimatedListItem>
             )}
           />
         )}
@@ -130,39 +133,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  createButton: {
-    backgroundColor: PRIMARY,
-    borderRadius: 12,
-    paddingVertical: Spacing.three,
-    alignItems: 'center',
-  },
-  createButtonText: {
-    color: '#FFFFFF',
-  },
   loading: {
     marginTop: Spacing.five,
-  },
-  empty: {
-    marginTop: Spacing.five,
-    textAlign: 'center',
   },
   list: {
     gap: Spacing.two,
   },
   row: {
-    backgroundColor: '#F0F0F3',
-    borderRadius: 12,
-    padding: Spacing.three,
-    gap: Spacing.one,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.three,
+  },
+  rowBody: {
+    flex: 1,
+    gap: Spacing.half,
   },
   rowHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.two,
-  },
-  statusDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    flexWrap: 'wrap',
   },
 });
