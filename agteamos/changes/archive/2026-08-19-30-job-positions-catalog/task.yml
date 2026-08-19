@@ -5,7 +5,7 @@ schema: full
 context_tier: 2
 layer: fullstack
 priority: high
-status: in_progress
+status: done
 branch: feature/30-job-positions-catalog
 platform: github
 ticket_url: https://github.com/oclaw74-lang/ZarpeIslands/issues/30
