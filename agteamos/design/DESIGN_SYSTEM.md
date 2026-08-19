@@ -67,5 +67,105 @@ Todo texto de interfaz vive en archivos de traducción (`i18next`/`react-i18next
 
 ## Pendiente
 
-- [ ] Logo final y validación de nombre de marca (`documents/01`, próximos pasos) — no bloquea el desarrollo de componentes base.
+- [x] Logo final y validación de nombre de marca — resuelto en B1 (glassmorphism + tipografía Sora, ver abajo).
 - [ ] Sin herramienta de diseño externa (Figma/Storybook) referenciada todavía — agregar aquí cuando exista.
+
+---
+
+# UI-1: Sistema de componentes (2026-08-19)
+
+**Ticket**: [#38](https://github.com/oclaw74-lang/ZarpeIslands/issues/38)
+
+Esta sección formaliza y actualiza lo de arriba con lo realmente implementado
+en código (`src/constants/theme.ts`, `src/components/ui/`) — la sección
+original documenta la intención de marca desde el bootstrap del proyecto; esta
+documenta el sistema de componentes real, construido a partir de esa base más
+lo aprendido en las pantallas de auth (B1/B2) ya shippeadas.
+
+## Contexto y decisión
+
+Pedido explícito del usuario: modernizar la UI (iconografía real, animaciones,
+componentes reutilizables, look 2026) inspirado en referencias de Dribbble
+(DailyMe — nutrition app, furniture e-commerce app) y en el research de
+frameworks tipo MAUI/MudBlazor para RN.
+
+**Se evaluaron 3 opciones**:
+1. **Tamagui** — compilador propio, máximo rendimiento, costo de setup alto.
+2. **Gluestack-UI** (sucesor de NativeBase) — adopción incremental vía CLI, basado en `react-native-aria`.
+3. **Sistema propio liviano** — componentes propios sobre `@react-native-vector-icons/ionicons` + `react-native-reanimated` (ya instalado).
+
+**Elegida: opción 3**, decisión del usuario (ver [ADR-005](../architecture/adr/ADR-005-ui-design-system.md)). Razón: las pantallas de auth (B1/B2)
+ya están shippeadas, verificadas contra Supabase real y tienen identidad de marca
+propia (glassmorphism + Sora) — migrar a un framework completo implicaría
+reescribirlas sin beneficio claro.
+
+## Paleta implementada (`src/constants/theme.ts` → `Palette`)
+
+Esta es la paleta real en código — algunos tokens difieren levemente de la
+paleta conceptual original de arriba (ej. `accent` pasó de Caribbean Blue
+`#1B9AAA` a `#3c87f7`, tomado de los links ya usados en B1/B2):
+
+| Token | Hex | Uso |
+|---|---|---|
+| `primary` | `#0B4F6C` | Botones primarios, íconos destacados, título de auth (= `color.primary`) |
+| `primaryDark` | `#0D2740` | Texto sobre fondo claro, splash |
+| `accent` | `#3c87f7` | Links, acentos secundarios |
+| `success` | `#2E8B57` | Badge de estado "activo" (= `color.status.ok`) |
+| `warning` | `#E9B44C` | Badge de estado "en mantenimiento" (= `color.status.warning`) |
+| `danger` | `#D64550` | Errores, estados destructivos (= `color.status.danger`) |
+| `neutralLine` | `#D9E1E4` | Bordes de Card/inputs |
+| `neutralMuted` | `#7C8B93` | Texto secundario, placeholders, EmptyState |
+| `surface` | `#F3F6F7` | Fondo de pantalla, IconCircle default |
+| `surfaceElevated` | `#FFFFFF` | Fondo de Card |
+
+`Radius` (`small` 8 / `medium` 12 / `large` 16 / `pill` 999) y `Shadow.soft`
+(sombra suave, `shadowOpacity: 0.08`) completan los tokens — usar siempre estas
+constantes, no hex/números sueltos en componentes nuevos.
+
+## Componentes (`src/components/ui/`)
+
+| Componente | Uso | Notas |
+|---|---|---|
+| `Card` | Contenedor base de toda fila/sección elevada | `flat` para anidar sin doble sombra |
+| `Badge` | Pastilla de estado/flag (`tone`: primary/success/warning/danger/neutral) | Reemplaza texto suelto de estado — cumple la regla de accesibilidad de arriba (texto + color, no solo color) |
+| `IconCircle` | Ícono en círculo de fondo — filas de lista, headers | `size`: small/medium/large |
+| `AppButton` | Botón con feedback de presión animado (`scale` vía reanimated) | `variant`: primary/secondary/ghost |
+| `EmptyState` | Estado vacío estandarizado (ícono + texto) | Reemplaza `<ThemedText>` centrado suelto |
+| `AnimatedListItem` | Envoltorio de entrada animada (`FadeInDown`, escalonado por índice) | Usar en `renderItem` de FlatList |
+
+Iconografía: `@react-native-vector-icons/ionicons` (`@expo/vector-icons` está
+deprecado desde Expo SDK 57 — no usarlo en código nuevo). Nombres de ícono
+siguen el set de [Ionicons](https://ionic.io/ionicons), de línea simple
+(outline), consistente con la guía de iconografía original de arriba.
+
+## Cuándo usar cada uno (guía rápida)
+
+- **Toda fila de lista** → `Pressable` + `Card` (fila) con `IconCircle` a la
+  izquierda + contenido a la derecha, envuelta en `AnimatedListItem` con el
+  `index` del `renderItem`.
+- **Todo botón de acción principal** (crear, guardar) → `AppButton`, no
+  `Pressable` + `StyleSheet` suelto.
+- **Todo flag/estado mostrado en una fila** → `Badge` con el `tone` semántico
+  correspondiente (no texto plano ni colores hardcodeados).
+- **Toda lista vacía** → `EmptyState` con un ícono representativo del dominio.
+
+## Aplicado en (UI-1)
+
+- `BoatsListScreen` — ícono `boat`, `Badge` de estado (success/warning/neutral).
+- `JobPositionsListScreen` — ícono `briefcase`, `Badge` de flags (primary/neutral).
+- `HomeScreen` — links de navegación temporales migrados a `Card` + `IconCircle`.
+
+## Testing
+
+Reanimated requiere un mock manual en `jest.setup.js` (`jest.mock('react-native-reanimated', ...)`)
+— el mock oficial (`react-native-reanimated/mock`) inicializa el módulo nativo
+real de `react-native-worklets` (arquitectura nueva de Reanimated 4) y no corre
+en Node. El mock propio cubre solo las APIs usadas: `useSharedValue`,
+`useAnimatedStyle`, `withTiming`, `Animated.View`, `Animated.createAnimatedComponent`, `FadeInDown`.
+
+## Pendiente / próximos pasos
+
+- Migrar `BoatFormScreen`/`JobPositionFormScreen` a `AppButton` (fuera de
+  alcance de UI-1, quedó con los selectores de pill existentes).
+- Todo dominio nuevo (B4 Staff, D Ponche, etc.) debe usar estos componentes
+  desde el inicio, no reinventar filas con `StyleSheet` suelto.

@@ -6,16 +6,23 @@ import { useFocusEffect, useRouter } from 'expo-router';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
+import { AnimatedListItem } from '@/components/ui/AnimatedListItem';
+import { AppButton } from '@/components/ui/AppButton';
+import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/components/ui/Card';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { IconCircle } from '@/components/ui/IconCircle';
+import { Palette, Spacing } from '@/constants/theme';
 import { JobPosition, listJobPositions } from '@/features/job-positions/api/jobPositionService';
 import { getCompanyMembership } from '@/features/company/api/companyService';
-
-const PRIMARY = '#0B4F6C';
 
 /**
  * C2: catálogo de puestos de trabajo. Se siembra con 5 puestos default al
  * crear la empresa (trigger en la migración, AC#1) — esta lista no crea
  * ese default, solo lo muestra y permite editar/agregar (owner/manager).
+ *
+ * UI-1: filas migradas a `Card` + ícono (`IconCircle`) + `Badge`s de flags,
+ * con animación de entrada escalonada (`AnimatedListItem`).
  */
 export default function JobPositionsListScreen() {
   const { t } = useTranslation('jobPositions');
@@ -47,49 +54,45 @@ export default function JobPositionsListScreen() {
         <ThemedText type="title">{t('list.title')}</ThemedText>
 
         {canManage && (
-          <Pressable
+          <AppButton
             testID="job-positions-create"
-            style={styles.createButton}
+            label={t('list.createButton')}
             onPress={() => router.push('/job-positions/new')}
-          >
-            <ThemedText type="smallBold" style={styles.createButtonText}>
-              {t('list.createButton')}
-            </ThemedText>
-          </Pressable>
+          />
         )}
 
         {loading ? (
-          <ActivityIndicator color={PRIMARY} style={styles.loading} />
+          <ActivityIndicator color={Palette.primary} style={styles.loading} />
         ) : positions.length === 0 ? (
-          <ThemedText testID="job-positions-empty" type="small" style={styles.empty}>
-            {t('list.empty')}
-          </ThemedText>
+          <EmptyState testID="job-positions-empty" icon="briefcase-outline" title={t('list.empty')} />
         ) : (
           <FlatList
             data={positions}
             keyExtractor={(item) => item.id}
             contentContainerStyle={styles.list}
-            renderItem={({ item }) => (
-              <Pressable
-                testID={`job-position-row-${item.id}`}
-                style={styles.row}
-                disabled={!canManage}
-                onPress={() => canManage && router.push(`/job-positions/${item.id}/edit`)}
-              >
-                <ThemedText type="smallBold">{item.name}</ThemedText>
-                <View style={styles.badgeRow}>
-                  {item.isRequiredPerShift && (
-                    <ThemedText type="small" style={styles.badge}>
-                      {t('list.requiredPerShift')}
-                    </ThemedText>
-                  )}
-                  {item.rotationRepeatAllowed && (
-                    <ThemedText type="small" style={styles.badge}>
-                      {t('list.rotationRepeatAllowed')}
-                    </ThemedText>
-                  )}
-                </View>
-              </Pressable>
+            renderItem={({ item, index }) => (
+              <AnimatedListItem index={index}>
+                <Pressable
+                  testID={`job-position-row-${item.id}`}
+                  disabled={!canManage}
+                  onPress={() => canManage && router.push(`/job-positions/${item.id}/edit`)}
+                >
+                  <Card style={styles.row}>
+                    <IconCircle name="briefcase" />
+                    <View style={styles.rowBody}>
+                      <ThemedText type="smallBold">{item.name}</ThemedText>
+                      <View style={styles.badgeRow}>
+                        {item.isRequiredPerShift && (
+                          <Badge tone="primary" label={t('list.requiredPerShift')} />
+                        )}
+                        {item.rotationRepeatAllowed && (
+                          <Badge tone="neutral" label={t('list.rotationRepeatAllowed')} />
+                        )}
+                      </View>
+                    </View>
+                  </Card>
+                </Pressable>
+              </AnimatedListItem>
             )}
           />
         )}
@@ -108,37 +111,24 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.three,
     gap: Spacing.three,
   },
-  createButton: {
-    backgroundColor: PRIMARY,
-    borderRadius: 12,
-    paddingVertical: Spacing.three,
-    alignItems: 'center',
-  },
-  createButtonText: {
-    color: '#FFFFFF',
-  },
   loading: {
     marginTop: Spacing.five,
-  },
-  empty: {
-    marginTop: Spacing.five,
-    textAlign: 'center',
   },
   list: {
     gap: Spacing.two,
   },
   row: {
-    backgroundColor: '#F0F0F3',
-    borderRadius: 12,
-    padding: Spacing.three,
-    gap: Spacing.one,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.three,
+  },
+  rowBody: {
+    flex: 1,
+    gap: Spacing.half,
   },
   badgeRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: Spacing.two,
-  },
-  badge: {
-    color: '#0B4F6C',
   },
 });
