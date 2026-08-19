@@ -31,6 +31,12 @@
 
 ## Función helper
 - `current_company_member_id()`: retorna el `id` de `company_members` del usuario autenticado (`auth.uid()`). `SECURITY DEFINER`.
+- `bootstrap_company(p_name, p_full_name, p_country, p_default_currency, p_default_language, p_timezone) returns company_members`
+  (B2): crea `companies` + `company_members` (owner) para el usuario autenticado en una sola
+  transacción. `SECURITY DEFINER`. Rechaza (`raise exception`) si `auth.uid()` ya tiene una
+  membresía — evita duplicados sin depender de RLS de INSERT (esa llega completa en B5).
+  `grant execute` a `authenticated`.
 
 ## Historial de cambios
 - 2026-08-18 (#12): creación del modelo mínimo.
+- 2026-08-18 (#22, B2): agregada `bootstrap_company()`.

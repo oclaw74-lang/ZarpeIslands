@@ -13,62 +13,59 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
-import * as Linking from 'expo-linking';
 
 import { ThemedText } from '@/components/themed-text';
 import { BrandFont, Spacing } from '@/constants/theme';
-import { signIn, signInWithGoogle } from '@/features/auth/api/authService';
+import { signUp } from '@/features/auth/api/authService';
+import { bootstrapCompany } from '@/features/company/api/companyService';
 
-// Paleta de agteamos/design/DESIGN_SYSTEM.md — Deep Ocean (primario).
 const PRIMARY = '#0B4F6C';
 
 const HERO_BACKGROUND = require('@/assets/images/zarpeisland-welcome-modern-mobile.png');
 const ICON_BADGE = require('@/assets/images/auth-badge.png');
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
   const { t } = useTranslation('auth');
   const router = useRouter();
 
+  const [companyName, setCompanyName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [googleSubmitting, setGoogleSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async () => {
     setError('');
     setSubmitting(true);
 
-    const result = await signIn(email.trim(), password);
+    const result = await signUp(email.trim(), password, companyName.trim());
 
+    if (!result.ok) {
+      setSubmitting(false);
+      setError(t('register.unknownError'));
+      return;
+    }
+
+    if (!result.sessionActive) {
+      // Confirmación de email requerida (mailer_autoconfirm: false en el
+      // proyecto real) — el bootstrap de la empresa ocurre recién cuando
+      // haya sesión, ver CompanyOnboardingScreen y useAuthDeepLinkRedirect.
+      setSubmitting(false);
+      router.replace({ pathname: '/check-email', params: { email: email.trim() } });
+      return;
+    }
+
+    // mailer_autoconfirm en true (no es el caso del proyecto real hoy, pero
+    // el código soporta ambos): ya hay sesión, se puede bootstrapear ahora.
+    const bootstrapResult = await bootstrapCompany(companyName.trim(), email.trim());
     setSubmitting(false);
 
-    if (result.ok) {
+    if (bootstrapResult.ok) {
       router.replace('/');
       return;
     }
 
-    setError(result.message === 'invalid-credentials' ? t('login.genericError') : t('login.unknownError'));
-  };
-
-  const handleGoogleSignIn = async () => {
-    setError('');
-    setGoogleSubmitting(true);
-
-    const redirectTo = Linking.createURL('login');
-    const result = await signInWithGoogle(redirectTo);
-
-    setGoogleSubmitting(false);
-
-    if (result.ok) {
-      router.replace('/');
-      return;
-    }
-
-    // AC#3: cancelar el flujo de Google no debe mostrar un error falso.
-    if (result.message === 'cancelled') return;
-
-    setError(t('login.unknownError'));
+    setError(t('register.unknownError'));
   };
 
   return (
@@ -84,13 +81,22 @@ export default function LoginScreen() {
               <Image source={ICON_BADGE} style={styles.badgeImage} resizeMode="contain" />
             </View>
             <ThemedText type="title" style={styles.title}>
-              {t('login.title')}
+              {t('register.title')}
             </ThemedText>
 
             <TextInput
-              testID="login-email"
+              testID="register-company-name"
               style={styles.input}
-              placeholder={t('login.emailLabel')}
+              placeholder={t('register.companyNameLabel')}
+              placeholderTextColor="#7C8B93"
+              value={companyName}
+              onChangeText={setCompanyName}
+            />
+
+            <TextInput
+              testID="register-email"
+              style={styles.input}
+              placeholder={t('register.emailLabel')}
               placeholderTextColor="#7C8B93"
               autoCapitalize="none"
               autoComplete="email"
@@ -100,25 +106,25 @@ export default function LoginScreen() {
             />
 
             <TextInput
-              testID="login-password"
+              testID="register-password"
               style={styles.input}
-              placeholder={t('login.passwordLabel')}
+              placeholder={t('register.passwordLabel')}
               placeholderTextColor="#7C8B93"
               secureTextEntry
               autoCapitalize="none"
-              autoComplete="password"
+              autoComplete="password-new"
               value={password}
               onChangeText={setPassword}
             />
 
             {error.length > 0 && (
-              <ThemedText testID="login-error" type="small" style={styles.error}>
+              <ThemedText testID="register-error" type="small" style={styles.error}>
                 {error}
               </ThemedText>
             )}
 
             <Pressable
-              testID="login-submit"
+              testID="register-submit"
               style={[styles.button, submitting && styles.buttonDisabled]}
               disabled={submitting}
               onPress={handleSubmit}
@@ -127,43 +133,14 @@ export default function LoginScreen() {
                 <ActivityIndicator color="#FFFFFF" />
               ) : (
                 <ThemedText type="smallBold" style={styles.buttonText}>
-                  {t('login.submit')}
+                  {t('register.submit')}
                 </ThemedText>
               )}
             </Pressable>
 
-            <Pressable testID="login-forgot-password" onPress={() => router.push('/forgot-password')}>
+            <Pressable testID="register-back-to-login" onPress={() => router.replace('/login')}>
               <ThemedText type="link" style={styles.link}>
-                {t('login.forgotPassword')}
-              </ThemedText>
-            </Pressable>
-
-            <View style={styles.dividerRow}>
-              <View style={styles.dividerLine} />
-              <ThemedText type="small" style={styles.dividerText}>
-                {t('login.orDivider')}
-              </ThemedText>
-              <View style={styles.dividerLine} />
-            </View>
-
-            <Pressable
-              testID="login-google"
-              style={[styles.googleButton, googleSubmitting && styles.buttonDisabled]}
-              disabled={googleSubmitting}
-              onPress={handleGoogleSignIn}
-            >
-              {googleSubmitting ? (
-                <ActivityIndicator color={PRIMARY} />
-              ) : (
-                <ThemedText type="smallBold" style={styles.googleButtonText}>
-                  {t('login.continueWithGoogle')}
-                </ThemedText>
-              )}
-            </Pressable>
-
-            <Pressable testID="login-register" onPress={() => router.push('/register')}>
-              <ThemedText type="link" style={styles.link}>
-                {t('login.createAccount')}
+                {t('register.alreadyHaveAccount')}
               </ThemedText>
             </Pressable>
           </View>
@@ -217,8 +194,8 @@ const styles = StyleSheet.create({
   title: {
     color: PRIMARY,
     textAlign: 'center',
-    fontSize: 30,
-    lineHeight: 36,
+    fontSize: 28,
+    lineHeight: 34,
   },
   input: {
     backgroundColor: '#F3F6F7',
@@ -252,32 +229,5 @@ const styles = StyleSheet.create({
   },
   error: {
     color: '#D64550',
-  },
-  dividerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#D9E1E4',
-  },
-  dividerText: {
-    color: '#7C8B93',
-  },
-  googleButton: {
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#D9E1E4',
-    borderRadius: 14,
-    paddingVertical: Spacing.three,
-    minHeight: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  googleButtonText: {
-    color: '#0D2740',
-    fontSize: 16,
   },
 });

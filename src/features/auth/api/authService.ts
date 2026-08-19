@@ -31,6 +31,39 @@ export async function signIn(email: string, password: string): Promise<AuthResul
   return { ok: true };
 }
 
+export type SignUpResult =
+  | { ok: true; sessionActive: boolean }
+  | { ok: false; message: string };
+
+/**
+ * Registro (B2). El proyecto real tiene `mailer_autoconfirm: false`
+ * (verificado vía `GET /auth/v1/settings`) — `signUp` casi nunca devuelve
+ * sesión activa de una, el usuario tiene que confirmar el email primero.
+ * `sessionActive` le dice al caller si puede bootstrapear la empresa ya
+ * mismo o si hay que mandarlo a "confirmá tu email" (ver `CheckEmailScreen`).
+ *
+ * `companyName` se guarda en `user_metadata` (`options.data`) para
+ * sobrevivir el hueco sin sesión hasta la confirmación — `CompanyOnboardingScreen`
+ * lo lee de ahí, sin necesitar tabla temporal propia.
+ */
+export async function signUp(email: string, password: string, companyName: string): Promise<SignUpResult> {
+  if (!supabase) {
+    return { ok: false, message: 'missing-config' };
+  }
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { data: { pending_company_name: companyName } },
+  });
+
+  if (error) {
+    return { ok: false, message: error.message };
+  }
+
+  return { ok: true, sessionActive: data.session !== null };
+}
+
 export async function requestPasswordReset(email: string, redirectTo: string): Promise<AuthResult> {
   if (!supabase) {
     return { ok: false, message: 'missing-config' };
