@@ -3,9 +3,11 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import enAuth from '@/lib/i18n/locales/en/auth.json';
+import enBoats from '@/lib/i18n/locales/en/boats.json';
 import en from '@/lib/i18n/locales/en/common.json';
 import enCompany from '@/lib/i18n/locales/en/company.json';
 import esAuth from '@/lib/i18n/locales/es/auth.json';
+import esBoats from '@/lib/i18n/locales/es/boats.json';
 import es from '@/lib/i18n/locales/es/common.json';
 import esCompany from '@/lib/i18n/locales/es/company.json';
 
@@ -18,8 +20,8 @@ export const SUPPORTED_LANGUAGES = ['en', 'es'] as const;
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
 const resources = {
-  en: { common: en, auth: enAuth, company: enCompany },
-  es: { common: es, auth: esAuth, company: esCompany },
+  en: { common: en, auth: enAuth, company: enCompany, boats: enBoats },
+  es: { common: es, auth: esAuth, company: esCompany, boats: esBoats },
 };
 
 function detectDeviceLanguage(): SupportedLanguage {

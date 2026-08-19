@@ -1,6 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { Pressable, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from 'expo-router';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -16,15 +17,23 @@ import { Spacing } from '@/constants/theme';
  */
 export default function HomeScreen() {
   const { t } = useTranslation('common');
+  const router = useRouter();
 
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <ThemedText type="title">{t('appName')}</ThemedText>
-        <ThemedText type="small">{t('home.scaffoldStatus')}</ThemedText>
-        <LanguageToggle />
-        <SyncTestPanel />
-        <PushNotificationsPanel />
+        <ScrollView contentContainerStyle={styles.scroll}>
+          <ThemedText type="title">{t('appName')}</ThemedText>
+          <ThemedText type="small">{t('home.scaffoldStatus')}</ThemedText>
+          <LanguageToggle />
+
+          <Pressable testID="home-boats-link" onPress={() => router.push('/boats')}>
+            <ThemedText type="linkPrimary">Boats (C1)</ThemedText>
+          </Pressable>
+
+          <SyncTestPanel />
+          <PushNotificationsPanel />
+        </ScrollView>
       </SafeAreaView>
     </ThemedView>
   );
@@ -36,8 +45,10 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+  },
+  scroll: {
     alignItems: 'center',
-    justifyContent: 'center',
     gap: Spacing.two,
+    paddingVertical: Spacing.four,
   },
 });

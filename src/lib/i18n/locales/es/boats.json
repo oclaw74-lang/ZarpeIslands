@@ -1,0 +1,28 @@
+{
+  "list": {
+    "title": "Barcos",
+    "empty": "Todavía no hay barcos.",
+    "createButton": "Agregar barco",
+    "showInactive": "Mostrar inactivos",
+    "hideInactive": "Ocultar inactivos",
+    "statusActive": "Activo",
+    "statusInMaintenance": "En mantenimiento",
+    "statusInactive": "Inactivo"
+  },
+  "form": {
+    "createTitle": "Agregar barco",
+    "editTitle": "Editar barco",
+    "nameLabel": "Nombre",
+    "registrationNumberLabel": "Matrícula",
+    "boatTypeLabel": "Tipo",
+    "typeExcursion": "Excursión",
+    "typeRental": "Alquiler",
+    "typeMixed": "Mixto",
+    "capacityLabel": "Capacidad",
+    "statusLabel": "Estado",
+    "notesLabel": "Notas",
+    "submitCreate": "Crear barco",
+    "submitEdit": "Guardar cambios",
+    "unknownError": "Algo salió mal. Intentá de nuevo."
+  }
+}
