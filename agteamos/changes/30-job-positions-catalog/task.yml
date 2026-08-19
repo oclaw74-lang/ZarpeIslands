@@ -1,0 +1,26 @@
+id: "30-job-positions-catalog"
+title: "C2. Catálogo de job_positions"
+type: feature
+schema: full
+context_tier: 2
+layer: fullstack
+priority: high
+status: in_progress
+branch: feature/30-job-positions-catalog
+platform: github
+ticket_url: https://github.com/oclaw74-lang/ZarpeIslands/issues/30
+domains:
+  - job_positions
+doc_impact: true
+created: 2026-08-19
+updated: 2026-08-19
+owner:
+  name: "Claude Engineering"
+  email: "oclaw74@gmail.com"
+handoffs: []
+assigned_to:
+  - "@architect"
+  - "@backend-engineer"
+  - "@frontend-engineer"
+depends_on:
+  - "22-company-bootstrap"

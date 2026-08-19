@@ -31,6 +31,10 @@ export default function HomeScreen() {
             <ThemedText type="linkPrimary">Boats (C1)</ThemedText>
           </Pressable>
 
+          <Pressable testID="home-job-positions-link" onPress={() => router.push('/job-positions')}>
+            <ThemedText type="linkPrimary">Job positions (C2)</ThemedText>
+          </Pressable>
+
           <SyncTestPanel />
           <PushNotificationsPanel />
         </ScrollView>
