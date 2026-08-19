@@ -1,0 +1,63 @@
+<svg width="1080" height="1920" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="heroSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0D2740"/>
+      <stop offset="45%" stop-color="#1B5A78"/>
+      <stop offset="100%" stop-color="#3FA9BC"/>
+    </linearGradient>
+    <linearGradient id="heroWave1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0A3245"/>
+      <stop offset="100%" stop-color="#124F63"/>
+    </linearGradient>
+    <linearGradient id="heroWave2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#124F63"/>
+      <stop offset="100%" stop-color="#1D8CA0"/>
+    </linearGradient>
+    <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F5E7B8" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#F5E7B8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1080" height="1920" fill="url(#heroSky)"/>
+
+  <circle cx="820" cy="260" r="220" fill="url(#moonGlow)"/>
+  <circle cx="820" cy="260" r="90" fill="#FBF2D6"/>
+
+  <g opacity="0.8" fill="#FFFFFF">
+    <circle cx="140" cy="180" r="2.5"/>
+    <circle cx="220" cy="320" r="2"/>
+    <circle cx="90" cy="420" r="2"/>
+    <circle cx="320" cy="150" r="2"/>
+    <circle cx="460" cy="240" r="1.8"/>
+    <circle cx="600" cy="120" r="2.2"/>
+    <circle cx="960" cy="420" r="2"/>
+    <circle cx="1000" cy="180" r="1.8"/>
+    <circle cx="180" cy="520" r="1.6"/>
+  </g>
+
+  <g stroke="#173A5E" stroke-width="9" fill="none" stroke-linecap="round" opacity="0.85">
+    <path d="M180 500 q16 -16 32 0 q16 -16 32 0"/>
+    <path d="M300 560 q14 -14 28 0 q14 -14 28 0"/>
+  </g>
+
+  <ellipse cx="150" cy="1120" rx="230" ry="70" fill="#3E9C6D" opacity="0.9"/>
+  <path d="M150 1120 Q110 980 160 820" stroke="#4A2E1B" stroke-width="24" fill="none" stroke-linecap="round"/>
+  <g fill="#2F7A54">
+    <path d="M160 820 Q40 770 -20 660 Q120 670 190 780 Z"/>
+    <path d="M160 820 Q60 880 -10 990 Q100 950 175 850 Z"/>
+    <path d="M160 820 Q180 690 120 580 Q260 650 220 800 Z"/>
+    <path d="M160 820 Q290 790 370 690 Q320 810 190 850 Z"/>
+    <path d="M160 820 Q300 880 370 990 Q220 960 165 850 Z"/>
+  </g>
+
+  <path d="M660 1180 L660 800 L790 940 Q735 1030 660 1070 Z" fill="#0A2136"/>
+  <path d="M628 1180 Q636 900 660 800 Q560 900 540 1060 Q532 1130 560 1180 Z" fill="#123048"/>
+
+  <path d="M420 1180 L900 1180 L840 1300 Q660 1340 480 1300 Z" fill="#0A2136"/>
+  <rect x="420" y="1172" width="480" height="18" rx="9" fill="#DCEAEF"/>
+
+  <path d="M0 1420 Q220 1330 440 1420 Q660 1510 880 1420 Q980 1385 1080 1420 L1080 1620 L0 1620 Z" fill="url(#heroWave1)"/>
+  <path d="M0 1540 Q240 1460 480 1540 Q700 1615 940 1540 Q1020 1510 1080 1540 L1080 1750 L0 1750 Z" fill="url(#heroWave2)"/>
+  <path d="M0 1680 Q260 1620 520 1680 Q760 1740 1080 1680 L1080 1920 L0 1920 Z" fill="#1FB3B8"/>
+</svg>

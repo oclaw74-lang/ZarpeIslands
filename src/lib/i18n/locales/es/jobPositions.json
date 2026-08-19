@@ -1,0 +1,19 @@
+{
+  "list": {
+    "title": "Puestos de trabajo",
+    "empty": "Todavía no hay puestos.",
+    "createButton": "Agregar puesto",
+    "requiredPerShift": "Obligatorio en cada turno",
+    "rotationRepeatAllowed": "Puede repetirse en la rotación"
+  },
+  "form": {
+    "createTitle": "Agregar puesto",
+    "editTitle": "Editar puesto",
+    "nameLabel": "Nombre",
+    "requiredPerShiftLabel": "Obligatorio en cada turno",
+    "rotationRepeatAllowedLabel": "Se puede repetir en la rotación",
+    "submitCreate": "Crear puesto",
+    "submitEdit": "Guardar cambios",
+    "unknownError": "Algo salió mal. Intentá de nuevo."
+  }
+}

@@ -15,7 +15,7 @@ Desglose completo en tickets por epic (Step 6, GitHub Issues): 12 epics, ~58 tic
 
 | Epic | Tickets | Contenido |
 |---|---|---|
-| **A — Project Foundation & Scaffold** | 5 | Init Expo+TS, cliente Supabase, i18n base (en/es), PowerSync+SQLite, wiring de push |
+| **A — Project Foundation & Scaffold** | 5 | Init Expo+TS, cliente Supabase, i18n base (en/es), WatermelonDB+SQLite, wiring de push |
 | **B — Auth & Company Bootstrap** | 6 | Login/recuperar contraseña, bootstrap de empresa, sesión+routing por rol, CRUD `company_members`, RLS `companies`/`company_members`, Perfil (datos, idioma, logout) |
 | **C — Boats & Job Positions** | 4 | CRUD `boats`, catálogo `job_positions`, detalle de barco, RLS `boats`/`job_positions` |
 | **D — Ponche offline-first** | 5 | Schema+RLS `punches`, UI ponche in/out, cola offline+reconciliación, flag fuera de horario, indicador de conexión |

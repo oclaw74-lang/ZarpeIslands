@@ -1,0 +1,24 @@
+id: "13-postgres-push-pull"
+title: "A4b. Funciones Postgres push/pull para sync"
+type: feature
+schema: full
+context_tier: 2
+layer: backend
+priority: high
+status: done
+branch: feature/5/13-postgres-push-pull
+platform: github
+ticket_url: https://github.com/oclaw74-lang/ZarpeIslands/issues/13
+domains: ["punches"]
+doc_impact: true
+created: 2026-08-18
+updated: 2026-08-18
+owner:
+  name: "Claude Engineering"
+  email: "oclaw74@gmail.com"
+handoffs: []
+assigned_to:
+  - "@architect"
+  - "@backend-engineer"
+depends_on:
+  - "12-schema-companies-punches"

@@ -1,0 +1,25 @@
+id: "14-watermelondb-client"
+title: "A4c. Cliente WatermelonDB + orquestación de sync en la app"
+type: feature
+schema: full
+context_tier: 2
+layer: frontend
+priority: high
+status: done
+branch: feature/5/14-watermelondb-client
+platform: github
+ticket_url: https://github.com/oclaw74-lang/ZarpeIslands/issues/14
+domains: ["punches"]
+doc_impact: true
+created: 2026-08-18
+updated: 2026-08-18
+owner:
+  name: "Claude Engineering"
+  email: "oclaw74@gmail.com"
+handoffs: []
+assigned_to:
+  - "@architect"
+  - "@frontend-engineer"
+depends_on:
+  - "12-schema-companies-punches"
+  - "13-postgres-push-pull"

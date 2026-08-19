@@ -1,0 +1,28 @@
+{
+  "list": {
+    "title": "Boats",
+    "empty": "No boats yet.",
+    "createButton": "Add boat",
+    "showInactive": "Show inactive",
+    "hideInactive": "Hide inactive",
+    "statusActive": "Active",
+    "statusInMaintenance": "In maintenance",
+    "statusInactive": "Inactive"
+  },
+  "form": {
+    "createTitle": "Add boat",
+    "editTitle": "Edit boat",
+    "nameLabel": "Name",
+    "registrationNumberLabel": "Registration number",
+    "boatTypeLabel": "Type",
+    "typeExcursion": "Excursion",
+    "typeRental": "Rental",
+    "typeMixed": "Mixed",
+    "capacityLabel": "Capacity",
+    "statusLabel": "Status",
+    "notesLabel": "Notes",
+    "submitCreate": "Create boat",
+    "submitEdit": "Save changes",
+    "unknownError": "Something went wrong. Please try again."
+  }
+}

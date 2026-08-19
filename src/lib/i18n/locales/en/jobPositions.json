@@ -1,0 +1,19 @@
+{
+  "list": {
+    "title": "Job positions",
+    "empty": "No job positions yet.",
+    "createButton": "Add position",
+    "requiredPerShift": "Required every shift",
+    "rotationRepeatAllowed": "Can repeat in rotation"
+  },
+  "form": {
+    "createTitle": "Add position",
+    "editTitle": "Edit position",
+    "nameLabel": "Name",
+    "requiredPerShiftLabel": "Required on every shift",
+    "rotationRepeatAllowedLabel": "Can be repeated in rotation",
+    "submitCreate": "Create position",
+    "submitEdit": "Save changes",
+    "unknownError": "Something went wrong. Please try again."
+  }
+}

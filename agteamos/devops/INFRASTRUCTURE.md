@@ -39,8 +39,32 @@ No hay Docker/`docker-compose` en este proyecto: el backend es Supabase (gestion
 
 ## Variables de entorno
 
-Ver `.env.example` en la raíz — Supabase (URL + anon key), PowerSync URL, FCM sender ID, locale por defecto. Ningún valor real se commitea; los valores viven en Expo EAS secrets / GitHub Actions secrets cuando corresponda.
+Ver `.env.example` en la raíz — Supabase (URL + anon key), FCM sender ID, locale por defecto. Ningún valor real se commitea; los valores viven en Expo EAS secrets / GitHub Actions secrets cuando corresponda. La sincronización offline (WatermelonDB, ver ADR-004) no requiere variables de entorno propias — usa el mismo cliente Supabase.
 
 ## Autenticación de Git/GitHub para agentes
 
 Token vía variable de entorno `OCLAW74_GH_TOKEN` (ver `agteamos/tracker/github.md` y `agteamos/platform.yml` → `env_var_names.github_token`).
+
+## Base de datos — migraciones con Supabase CLI
+
+**Decisión (A2, 2026-08-18):** todo cambio de esquema en Postgres se hace vía migración versionada con el Supabase CLI, nunca editando tablas a mano desde el Dashboard. No requiere Docker — se trabaja directo contra el proyecto remoto (`supabase link`), sin levantar Postgres local.
+
+### Setup (una sola vez por máquina)
+
+1. `npx supabase login` — login interactivo (abre navegador), asocia el CLI a la cuenta dueña del proyecto.
+2. `npx supabase link --project-ref whirvyqwwvawzbnvlsbf --password "$SUPABASE_DB_PASSWORD"` — conecta el repo al proyecto remoto. La password de la base vive en la variable de entorno de usuario `SUPABASE_DB_PASSWORD` (nunca en el repo).
+
+### Flujo por ticket que toca esquema
+
+Cada ticket de epic que agrega/modifica tablas (ver `agteamos/product/backlog-detail.md` — ej. B5, C4, D1, E1, F1, G1, H1, J1, K1) sigue esta convención, **una migración por dominio/ticket, no un solo archivo gigante**:
+
+```bash
+npx supabase migration new <dominio_o_ticket>   # crea supabase/migrations/<timestamp>_<nombre>.sql
+# escribir el SQL (CREATE TABLE, políticas RLS, índices, etc.)
+npx supabase db push --password "$SUPABASE_DB_PASSWORD"   # aplica al proyecto remoto
+npx supabase migration list --password "$SUPABASE_DB_PASSWORD"   # confirma local == remoto
+```
+
+- `supabase/migrations/` se commitea al repo (es el historial versionado del esquema).
+- `supabase/.temp/` y `supabase/.branches/` están gitignored (estado local del CLI, no del esquema).
+- La migración `20260818145127_init_schema.sql` es la base (extensión `pgcrypto`, requerida por los PKs `uuid` de todo el modelo — ver `documents/05`). No crea tablas de negocio.

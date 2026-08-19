@@ -1,7 +1,9 @@
 # ADR-001: Selección de stack
 
-**Estado**: Aceptado
+**Estado**: Aceptado (parcialmente superseded — ver nota)
 **Fecha**: 2026-08-18
+
+> **Nota (2026-08-18):** la decisión de sincronización offline (PowerSync) fue reemplazada por WatermelonDB — ver [ADR-004](./ADR-004-offline-sync-watermelondb.md). El resto de este ADR (React Native + Expo, Supabase) sigue vigente. No se edita el contenido original de este ADR (inmutabilidad de decisiones históricas), solo se anota la sustitución.
 
 ## Contexto
 

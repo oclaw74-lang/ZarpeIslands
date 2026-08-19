@@ -1,0 +1,46 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="wave1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0E5C73"/>
+      <stop offset="100%" stop-color="#1D8CA0"/>
+    </linearGradient>
+    <linearGradient id="wave2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1D8CA0"/>
+      <stop offset="100%" stop-color="#3FC6C9"/>
+    </linearGradient>
+    <linearGradient id="hull" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1B4A73"/>
+      <stop offset="100%" stop-color="#0D2740"/>
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(174,174) scale(0.66)">
+    <circle cx="700" cy="300" r="115" fill="#F5C542"/>
+
+    <ellipse cx="150" cy="480" rx="170" ry="55" fill="#4CAE7C"/>
+    <path d="M150 480 Q120 380 155 260" stroke="#5B3A22" stroke-width="18" fill="none" stroke-linecap="round"/>
+    <g fill="#3E9C6D">
+      <path d="M155 260 Q60 220 20 140 Q120 150 170 230 Z"/>
+      <path d="M155 260 Q80 300 30 380 Q110 350 165 280 Z"/>
+      <path d="M155 260 Q170 170 130 90 Q210 140 185 240 Z"/>
+      <path d="M155 260 Q240 240 300 170 Q260 260 175 280 Z"/>
+      <path d="M155 260 Q250 300 300 370 Q200 350 160 280 Z"/>
+    </g>
+
+    <g stroke="#173A5E" stroke-width="12" fill="none" stroke-linecap="round">
+      <path d="M330 190 q22 -22 44 0 q22 -22 44 0"/>
+      <path d="M600 140 q20 -20 40 0 q20 -20 40 0"/>
+    </g>
+
+    <path d="M330 660 Q420 590 480 610 Q540 590 630 660 L620 700 L340 700 Z" fill="#BFE7EE" opacity="0.55"/>
+
+    <path d="M478 640 L478 360 L555 470 Q520 520 478 540 Z" fill="#0D2740"/>
+    <path d="M455 640 Q460 460 478 400 Q400 460 385 560 Q380 610 400 640 Z" fill="url(#hull)"/>
+    <rect x="430" y="580" width="90" height="30" rx="4" fill="#0D2740"/>
+    <path d="M300 660 L680 660 L630 745 Q490 780 370 745 Z" fill="url(#hull)"/>
+    <rect x="300" y="655" width="380" height="16" rx="8" fill="#E9F3F7"/>
+
+    <path d="M0 800 Q180 720 360 800 Q540 880 720 800 Q900 720 1024 800 L1024 1024 L0 1024 Z" fill="url(#wave1)"/>
+    <path d="M0 880 Q200 810 420 880 Q620 950 860 880 Q960 850 1024 880 L1024 1024 L0 1024 Z" fill="url(#wave2)"/>
+  </g>
+</svg>
